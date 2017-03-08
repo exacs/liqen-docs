@@ -1,0 +1,657 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Liqen API</title>
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #f8f8f2;
+  background-color: #272822;
+}
+.highlight .err {
+  color: #151515;
+  background-color: #ac4142;
+}
+.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
+  color: #505050;
+}
+.highlight .cp {
+  color: #f4bf75;
+}
+.highlight .nt {
+  color: #f4bf75;
+}
+.highlight .o, .highlight .ow {
+  color: #d0d0d0;
+}
+.highlight .p, .highlight .pi {
+  color: #d0d0d0;
+}
+.highlight .gi {
+  color: #90a959;
+}
+.highlight .gd {
+  color: #ac4142;
+}
+.highlight .gh {
+  color: #6a9fb5;
+  background-color: #151515;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #aa759f;
+}
+.highlight .kc {
+  color: #d28445;
+}
+.highlight .kt {
+  color: #d28445;
+}
+.highlight .kd {
+  color: #d28445;
+}
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #90a959;
+}
+.highlight .sr {
+  color: #75b5aa;
+}
+.highlight .si {
+  color: #8f5536;
+}
+.highlight .se {
+  color: #8f5536;
+}
+.highlight .nn {
+  color: #f4bf75;
+}
+.highlight .nc {
+  color: #f4bf75;
+}
+.highlight .no {
+  color: #f4bf75;
+}
+.highlight .na {
+  color: #6a9fb5;
+}
+.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
+  color: #90a959;
+}
+.highlight .ss {
+  color: #90a959;
+}
+    </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all.js"></script>
+  </head>
+
+  <body class="index" data-languages="[]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="images/logo.png" />
+        <div class="lang-selector">
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id="liqen-api">Liqen API</h1>
+
+<p>API del backend de la aplicación Liqen</p>
+
+          <h1 id="anotaciones">Anotaciones</h1>
+
+<blockquote>
+<p>Ejemplo de anotación sin concepto ni dimensión. Se destaca el texto &ldquo;Turquía&rdquo; de un texto.</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- "</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Turquía"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Ejemplo de anotación completo. Se destaca el texto &ldquo;Turquía&rdquo; y se vincula con el concepto &ldquo;País&rdquo; (<a href="https://schema.org/Country">Country</a>) y la dimensión &ldquo;where&rdquo;</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- "</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Turquía"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"where"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>El recurso <strong>Annotation</strong> describe una Anotación, un fragmento de texto con valor semántico. Se compone de tres elementos fundamentales:</p>
+
+<ol>
+<li>Un fragmento de texto del que se infiere una información.</li>
+<li>Opcionalmente, un concepto al que se refiere el fragmento de texto.</li>
+<li>Opcionalmente, una dimensión a la que se responde con el fragmento.</li>
+</ol>
+
+<p>Se debe entender que el recurso Anotación es una <em>extensión</em> o subclase del objeto <a href="https://www.w3.org/TR/annotation-model">Web Annotation</a>.</p>
+
+<h2 id="atributos">Atributos</h2>
+
+<p>Estos son los atributos del recurso Annotation. La mayoría de atributos pertenecen al modelo de datos descrito en la <a href="https://www.w3.org/TR/annotation-model">especificación W3C de Web Annotation</a>.</p>
+
+<p>En tanto que la Anotación Liqen es una extensión de <em>Web Annotation</em>, todos los atributos que tiene dicho objeto, también pueden llegar a pertenecer a la Anotación de Liqen.</p>
+
+<p>Los siguientes atributos son obligatorios en el objeto Anotación de Liqen pero no pertenecen a Web Annotation:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>article_id</td>
+<td>string</td>
+<td>ID del artículo que lleva la anotación</td>
+</tr>
+<tr>
+<td>dimension</td>
+<td>string</td>
+<td>Dimensión a la que se responde con el fragmento de texto. Valores admitidos: <code class="prettyprint">what</code>, <code class="prettyprint">who</code>, <code class="prettyprint">where</code>, <code class="prettyprint">when</code>, <code class="prettyprint">why</code>.</td>
+</tr>
+<tr>
+<td>id</td>
+<td>string</td>
+<td>ID de la propia anotación (a sí mismo).</td>
+</tr>
+</tbody></table>
+
+<p>Los siguientes atributos, que pertenecen al modelo de Web Annotation, son obligatorios en el objeto Anotación de Liqen:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>body</td>
+<td>object</td>
+<td>Concepto al que se refiere el fragmento de texto.</td>
+</tr>
+<tr>
+<td>body.id</td>
+<td>string</td>
+<td>ID del concepto</td>
+</tr>
+<tr>
+<td>target</td>
+<td>object</td>
+<td>Fragmento del texto que tiene el valor del concepto. Explicado a continuación.</td>
+</tr>
+</tbody></table>
+
+<h2 id="atributo-target-seleccionar-un-fragmento-de-texto">Atributo <code class="prettyprint">target</code>. Seleccionar un fragmento de texto</h2>
+
+<blockquote>
+<p><strong>Ejemplo</strong>. Supongamos que encontramos un extracto de texto cuyo HTML es:</p>
+</blockquote>
+<pre class="highlight html"><code><span class="nt">&lt;p</span> <span class="na">id=</span><span class="s">"p1"</span><span class="nt">&gt;</span>En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor. Una olla de algo más vaca que carnero, salpicón...<span class="nt">&lt;/p&gt;</span>
+</code></pre>
+
+<blockquote>
+<p>Y queremos resaltar el texto &ldquo;adarga&rdquo;. El objeto que representa esta selección (y por tanto el valor de la propiedad <code class="prettyprint">target</code> de la anotación) es:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"selector"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lanza en astillero, "</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"adarga"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" antigua"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>El <strong>fragmento de texto</strong> se debe definir de manera inequívoca mediante la propiedad <code class="prettyprint">target</code> del objeto Anotación en dos niveles:</p>
+
+<ol>
+<li>El fragmento. Se debe seleccionar un párrafo o sección del documento con un selector de tipo <a href="https://www.w3.org/TR/annotation-model/#fragment-selector">Fragment</a>, <a href="https://www.w3.org/TR/annotation-model/#xpath-selector">XPath</a> o <a href="https://www.w3.org/TR/annotation-model/#css-selector">CSS</a> según se indica en las secciones correspondientes de la especificación. Se deben usar las propiedades <code class="prettyprint">type</code> y <code class="prettyprint">value</code>.</li>
+<li>Texto dentro del fragmento. Se debe seleccionar una frase dentro del fragmento utilizando la propiedad <code class="prettyprint">refinedBy</code>. Esta propiedad a su vez debe ser un selector de tipo <a href="https://www.w3.org/TR/annotation-model/#text-quote-selector">Text Quote</a>.</li>
+</ol>
+
+<h2 id="obtener-un-listado-de-anotaciones">Obtener un listado de anotaciones</h2>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET /annotations</code></p>
+
+<h3 id="response">Response</h3>
+
+<p>Array de anotaciones. Devuelve un máximo de 10 elementos.</p>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<h2 id="obtener-una-anotaci-n">Obtener una anotación</h2>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET /annotations/&lt;ID&gt;</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ID</td>
+<td>ID de la anotación</td>
+</tr>
+</tbody></table>
+
+<h2 id="crear-una-anotaci-n">Crear una anotación</h2>
+
+<blockquote>
+<p>Ejemplo de cuerpo de la petición</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- "</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Turquía"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p><code class="prettyprint">POST /annotations</code></p>
+
+<p>Crea una nueva anotación</p>
+
+<h3 id="body-parameters">Body Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parámetro</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>article_id</td>
+<td>string</td>
+<td>Identificador de artículo al que se añade la anotación</td>
+</tr>
+<tr>
+<td>dimension</td>
+<td>string</td>
+<td>Dimensión a la que se responde con el fragmento de texto. Valores admitidos: <code class="prettyprint">what</code>, <code class="prettyprint">who</code>, <code class="prettyprint">where</code>, <code class="prettyprint">when</code>, <code class="prettyprint">why</code>.</td>
+</tr>
+<tr>
+<td>body.id</td>
+<td>string</td>
+<td>ID del concepto, normalmente referencia a un concepto de una ontología</td>
+</tr>
+<tr>
+<td>target</td>
+<td>object</td>
+<td>Fragmento del texto que tiene el valor del concepto. A diferencia de la especificación del modelo propuesto por la W3C, solo se tienen en cuenta las propiedades <code class="prettyprint">type</code>, <code class="prettyprint">value</code> y <code class="prettyprint">refinedBy</code> de este atributo. La propiedad <code class="prettyprint">source</code> se calcula con el parámetro <code class="prettyprint">article_id</code>.</td>
+</tr>
+</tbody></table>
+
+<h3 id="success-response">Success response</h3>
+
+<p>Si la petición tiene éxito, retorna un código 201 (Created) con las cabeceras:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Location</td>
+<td>URI de la nueva anotación creada</td>
+</tr>
+</tbody></table>
+
+<h3 id="errores">Errores</h3>
+
+<p>TODO</p>
+
+<h2 id="modificar-una-anotaci-n">Modificar una anotación</h2>
+
+<blockquote>
+<p>Ejemplo de cuerpo de la petición</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p><code class="prettyprint">PATCH /annotations/&lt;ID&gt;</code></p>
+
+<p>Realiza una modificación parcial de la anotación. El servidor internamente, utiliza un algoritmo de <em>merge</em> para mezclar el objeto anotación existente y el objeto anotación del cuerpo de la petición PATCH.</p>
+
+<ul>
+<li>Si se indica en el cuerpo una propiedad que está presente en el objeto anotación almacenado, el valor se superpone.</li>
+<li>Si se indica en el cuerpo una propiedad que no existe en el objeto anotación almacenado, se crea la nueva propiedad con el valor asignado.</li>
+</ul>
+
+<p>No es posible eliminar propiedades de objetos utilizando este método.</p>
+
+<h3 id="path-parameters">Path Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ID</td>
+<td>ID de la anotación</td>
+</tr>
+</tbody></table>
+
+<h3 id="body-parameters">Body Parameters</h3>
+
+<p>Los mismos que los indicados en la sección &ldquo;Crear una anotación&rdquo;</p>
+
+          <h1 id="hechos">Hechos</h1>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"answers_to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"annotations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- "</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Turquía"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"where"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amount"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- Turquía es el país que más refugiados alberga --"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.541.352"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"--, con una población de unos 80 millones de personas."</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"what"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Un hecho se define como un conjunto de Anotaciones que componen una única unidad informativa.</p>
+
+<p>Por ejemplo, el texto siguiente:</p>
+
+<p>&ldquo;1.- Turquía es el país que más refugiados alberga &ndash;2.541.352&ndash;, con una población de unos 80 millones de personas.&rdquo;</p>
+
+<p>Puede tener dos anotaciones:</p>
+
+<ul>
+<li>&ldquo;Turquía&rdquo; con la etiqueta <em>país</em> y la dimensión <em>where</em></li>
+<li>&ldquo;2.541.352&rdquo; con la etiqueta <em>amount</em> y la dimensión <em>what</em></li>
+</ul>
+
+<h2 id="atributos">Atributos</h2>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>string</td>
+<td>Identificador del propio recurso (el hecho)</td>
+</tr>
+<tr>
+<td>answers_to</td>
+<td>object</td>
+<td><em>(opcional)</em> ID de la pregunta a la que responde el hecho</td>
+</tr>
+</tbody></table>
+
+<h2 id="obtener-una-lista-de-hechos">Obtener una lista de hechos</h2>
+
+<p><code class="prettyprint">GET /facts/</code></p>
+
+<p>TODO</p>
+
+<h2 id="obtener-un-hecho">Obtener un hecho</h2>
+
+<p><code class="prettyprint">GET /facts/&lt;ID&gt;</code></p>
+
+<p>TODO</p>
+
+<h2 id="crear-un-hecho-y-anotaciones">Crear un hecho y anotaciones</h2>
+
+<blockquote>
+<p>Ejemplo de cuerpo de la petición en la que se crean, junto con el hecho, dos anotaciones</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"answers_to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"annotations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- "</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Turquía"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"where"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- Turquía es el país que más refugiados alberga --"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.541.352"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"--, con una población de unos 80 millones de personas."</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"what"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p><code class="prettyprint">POST /facts</code></p>
+
+<p>Crea un hecho nuevo. Este hecho se puede crear a partir de anotaciones existentes o crear nuevas anotaciones para incluirlas en este nuevo hecho.</p>
+
+<h3 id="body-parameters">Body Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parámetro</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>answers_to</td>
+<td>string</td>
+<td>Identificador de la pregunta a la que responderá el hecho.</td>
+</tr>
+<tr>
+<td>annotations</td>
+<td>array</td>
+<td>Lista de anotaciones</td>
+</tr>
+</tbody></table>
+
+<p>os elementos del array <code class="prettyprint">annotations</code> son los objetos que se pasarían al método &ldquo;Crear una anotación&rdquo;.</p>
+
+<h3 id="success-response">Success response</h3>
+
+<p>Si la petición tiene éxito, retorna un código 201 (Created) con las cabeceras</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Location</td>
+<td>URI del nuevo hecho creado</td>
+</tr>
+</tbody></table>
+
+<p>En el cuerpo de la petición se devuelve el objeto completo del hecho recién creado, que incluye también los IDs asignados a las anotaciones creadas.</p>
+
+<h2 id="crear-un-hecho-con-anotaciones-existentes">Crear un hecho con anotaciones existentes</h2>
+
+<blockquote>
+<p>Ejemplo en el que se crea un hecho que engloba las anotaciones 1 y 2</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"answers_to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"annotations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="body-parameters">Body Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parámetro</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>answers_to</td>
+<td>string</td>
+<td>Identificador de la pregunta a la que responderá el hecho.</td>
+</tr>
+<tr>
+<td>annotations</td>
+<td>array</td>
+<td>Lista de anotaciones</td>
+</tr>
+</tbody></table>
+
+<p>Los elementos del array <code class="prettyprint">annotations</code> son strings, siendo cada uno el ID de la anotación correspondiente.</p>
+
+<h3 id="success-response">Success response</h3>
+
+<p>Si la petición tiene éxito, retorna un código 201 (Created) con las cabeceras</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Location</td>
+<td>URI del nuevo hecho creado</td>
+</tr>
+</tbody></table>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+          </div>
+      </div>
+    </div>
+  </body>
+</html>
