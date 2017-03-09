@@ -6,6 +6,7 @@
 {
 	"id": "1",
 	"article_id": "1",
+	"author": "1",
 	"target": {
 		"type": "FragmentSelector",
 		"value": "p1",
@@ -25,6 +26,7 @@
 {
 	"id": "1",
 	"article_id": "1",
+	"author": "1",
 	"body": {
 		"id": "country"
 	},
@@ -61,6 +63,7 @@ Los siguientes atributos son obligatorios en el objeto Anotación de Liqen pero 
 Atributo     |Tipo  |Descripción
 --------     |----  |-----------
 article_id   |string|ID del artículo que lleva la anotación
+author       |string|ID del autor de la anotación
 dimension    |string|Dimensión a la que se responde con el fragmento de texto. Valores admitidos: `what`, `who`, `where`, `when`, `why`.
 id           |string|ID de la propia anotación (a sí mismo).
 
