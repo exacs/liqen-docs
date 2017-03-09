@@ -16,7 +16,9 @@
 			"exact": "Turquía",
 			"suffix": " es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."
 		}
-	}
+	},
+	"created_at": "2017-03-05T22:26:12.569669+00:00",
+	"updated_at": "2017-03-05T22:26:12.569669+00:00"
 }
 ```
 
@@ -40,7 +42,9 @@
 			"suffix": " es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."
 		}
 	},
-	"dimension": "where"
+	"dimension": "where",
+	"created_at": "2017-03-05T22:26:12.569669+00:00",
+	"updated_at": "2017-03-05T22:26:12.569669+00:00"
 }
 ```
 
@@ -66,6 +70,10 @@ article_id   |string|ID del artículo que lleva la anotación
 author       |string|ID del autor de la anotación
 dimension    |string|Dimensión a la que se responde con el fragmento de texto. Valores admitidos: `what`, `who`, `where`, `when`, `why`.
 id           |string|ID de la propia anotación (a sí mismo).
+created_at   |string|Fecha de creación de la Anotación<sup>†</sup>
+updated_at   |string|Fecha de última modificación de la Anotación<sup>†</sup>
+
+<sup>†</sup> En formato conforme a la [norma ISO 8601](https://es.wikipedia.org/wiki/ISO_8601)
 
 Los siguientes atributos, que pertenecen al modelo de Web Annotation, son obligatorios en el objeto Anotación de Liqen:
 
