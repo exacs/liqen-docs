@@ -29,9 +29,12 @@
 	"id": "1",
 	"article_id": "1",
 	"author": "1",
-	"body": {
-		"id": "country"
-	},
+	"tags": [
+		{
+			"id": "country",
+			"title": "Country"
+		}
+	],
 	"target": {
 		"type": "FragmentSelector",
 		"value": "p1",
@@ -79,9 +82,15 @@ Los siguientes atributos, que pertenecen al modelo de Web Annotation, son obliga
 
 Atributo|Tipo  |Descripción
 --------|----  |-----------
-body    |object|Concepto al que se refiere el fragmento de texto.
-body.id |string|ID del concepto
+tags    |array |Conceptos a los que se refiere el fragmento de texto.
 target  |object|Fragmento del texto que tiene el valor del concepto. Explicado a continuación.
+
+Cada elemento del array `tags` a su vez tiene los siguientes atributos
+
+Atributo|Tipo  |Descripción
+--------|----  |-----------
+id      |string|ID del concepto
+title   |string|Nombre descriptivo del concepto
 
 ## Atributo `target`. Seleccionar un fragmento de texto
 
@@ -151,9 +160,11 @@ ID      |ID de la anotación
 ```json
 {
 	"article_id": "1",
-	"body": {
-		"id": "country"
-	},
+	"tags": [
+		{
+			"id": "country"
+		}
+	]
 	"target": {
 		"type": "FragmentSelector",
 		"value": "p1",
@@ -177,8 +188,14 @@ Parámetro |Tipo  |Descripción
 --------- |----  |-----------
 article_id|string|Identificador de artículo al que se añade la anotación
 dimension |string|Dimensión a la que se responde con el fragmento de texto. Valores admitidos: `what`, `who`, `where`, `when`, `why`.
-body.id   |string|ID del concepto, normalmente referencia a un concepto de una ontología
+tags      |array |Conceptos a los que se refiere el fragmento de texto.
 target    |object|Fragmento del texto que tiene el valor del concepto. A diferencia de la especificación del modelo propuesto por la W3C, solo se tienen en cuenta las propiedades `type`, `value` y `refinedBy` de este atributo. La propiedad `source` se calcula con el parámetro `article_id`.
+
+Cada elemento del array `tags` a su vez debe tener los siguientes atributos
+
+Atributo|Tipo  |Descripción
+--------|----  |-----------
+id      |string|ID del concepto
 
 ### Success response
 
@@ -198,9 +215,11 @@ TODO
 
 ```json
 {
-	"body": {
-		"id": "country"
-	}
+	"tags": [
+		{
+			"id": "country"
+		}
+	]
 }
 ```
 
