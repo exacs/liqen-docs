@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Liqen API</title>
+    <title>Liqen Core</title>
 
     <style>
       .highlight table td { padding: 5px; }
@@ -112,9 +112,138 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="liqen-api">Liqen API</h1>
+        <h1 id="liqen-core">Liqen Core</h1>
 
-<p>API del backend de la aplicación Liqen</p>
+<p>El core de Liqen es un sistema de preguntas, respuestas a esas preguntas y anotaciones sobre artículos que forman parte de las respuestas.</p>
+
+<p>El modelo de datos del Core se compone de 5 tipos de objetos principales: <strong>Artículos</strong>, <strong>Anotaciones</strong>, <strong>Hechos</strong>, <strong>Preguntas</strong> y <strong>Etiquetas</strong>. Equivale a las clases <code class="prettyprint">Article</code>, <code class="prettyprint">Annotation</code>, <code class="prettyprint">Fact</code>, <code class="prettyprint">Question</code> y <code class="prettyprint">Tag</code> de la siguiente imagen.</p>
+
+<p><img src="http://www.plantuml.com/plantuml/png/RL6nRiCW4Dtv2fJH5L7dREtGFMftYyBPGK9WmP7OYlBlCU00JRfOTuztT-yz2yszfnyEbT10huJIDoNZ5nLgYCMlbGkv4P69nbZagAnfkJoFzzia7tr20vwiouWR0MCb7704sVFKXKa-kXlPBdo31e7MvVsuJ4d4cUi0bVG3Cnw3HVYVFJaOr1mhcBb8ftmO8bGsVAtu7ml5MDPk_0MSxz7MaMC0_-oyf9HCLtryBAmLVCJRCQV64x8snWDjqclmtVj-t-tgI1AyaXkT2M8Q1cHTLHSvHNp9fsDXUhgx_HNo6cOcb_P0Ovu6vET2oXacxSMiTwFLk6krtsn_VRq3" />`</p>
+
+<p>Este documento describe las acciones que ofrece la API de Liqen.</p>
+
+          <h1 id="autenticaci-n">Autenticación</h1>
+
+<p>La API de Liqen, para determinadas acciones, exige que el cliente esté correctamente autenticado.</p>
+
+<p>Para ello, primero se debe solicitar un <em>token de sesión</em>, el cual se usará en todas las peticiones posteriores.</p>
+
+<h2 id="iniciar-sesi-n">Iniciar sesión</h2>
+
+<blockquote>
+<p>Ejemplo de petición</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@example.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"secret"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Ejemplo de respuesta</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"expires"</span><span class="p">:</span><span class="w"> </span><span class="mi">1489358571</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Autentica un usuario en el sistema. Obtiene un token de sesión que se podrá usar en sucesivas peticiones a la API.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST /session</code></p>
+
+<h3 id="body-parameters">Body Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parámetro</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>email</td>
+<td>string</td>
+<td>E-mail de usuario</td>
+</tr>
+<tr>
+<td>password</td>
+<td>string</td>
+<td>Contraseña</td>
+</tr>
+</tbody></table>
+
+<h3 id="success-response">Success Response</h3>
+
+<p>Si la petición tiene éxito, retorna un código 200 (OK) con un cuerpo en formato JSON con los campos:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>access_token</td>
+<td>string</td>
+<td>Token de sesión</td>
+</tr>
+<tr>
+<td>expires</td>
+<td>integer</td>
+<td>Fecha/hora de caducidad del token en segundos UNIX</td>
+</tr>
+<tr>
+<td>user</td>
+<td>object</td>
+<td>Representación del usuario que inicia sesión</td>
+</tr>
+</tbody></table>
+
+<h2 id="peticiones-que-requiren-autenticaci-n">Peticiones que requiren autenticación</h2>
+
+<blockquote>
+<p><strong>Ejemplo</strong>, crear una anotación, que requiere autenticación</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -v http://&lt;LIQEN_API_ROOT&gt;/annotations <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span> <span class="se">\</span>
+    -d <span class="s1">'{
+    "article_id": 1,
+        "tags": [
+            {
+                "id": "country"
+            }
+        ],
+        "target": {
+            ...
+        }
+    }'</span>
+</code></pre>
+
+<p>Una vez se posee el token de sesión, se puede utilizar la API REST para realizar las peticiones oportunas.</p>
+
+<h3 id="headers">Headers</h3>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Valor</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Authorization</td>
+<td>Bearer <code class="prettyprint">&lt;Token de Acceso&gt;</code></td>
+<td>Token de acceso</td>
+</tr>
+</tbody></table>
 
           <h1 id="anotaciones">Anotaciones</h1>
 
