@@ -6,6 +6,7 @@
 {
 	"id": "1",
 	"article_id": "1",
+	"author": "1",
 	"target": {
 		"type": "FragmentSelector",
 		"value": "p1",
@@ -15,7 +16,9 @@
 			"exact": "Turquía",
 			"suffix": " es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."
 		}
-	}
+	},
+	"created_at": "2017-03-05T22:26:12.569669+00:00",
+	"updated_at": "2017-03-05T22:26:12.569669+00:00"
 }
 ```
 
@@ -25,9 +28,13 @@
 {
 	"id": "1",
 	"article_id": "1",
-	"body": {
-		"id": "country"
-	},
+	"author": "1",
+	"tags": [
+		{
+			"id": "country",
+			"title": "Country"
+		}
+	],
 	"target": {
 		"type": "FragmentSelector",
 		"value": "p1",
@@ -38,7 +45,9 @@
 			"suffix": " es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."
 		}
 	},
-	"dimension": "where"
+	"dimension": "where",
+	"created_at": "2017-03-05T22:26:12.569669+00:00",
+	"updated_at": "2017-03-05T22:26:12.569669+00:00"
 }
 ```
 
@@ -61,16 +70,27 @@ Los siguientes atributos son obligatorios en el objeto Anotación de Liqen pero 
 Atributo     |Tipo  |Descripción
 --------     |----  |-----------
 article_id   |string|ID del artículo que lleva la anotación
+author       |string|ID del autor de la anotación
 dimension    |string|Dimensión a la que se responde con el fragmento de texto. Valores admitidos: `what`, `who`, `where`, `when`, `why`.
 id           |string|ID de la propia anotación (a sí mismo).
+created_at   |string|Fecha de creación de la Anotación<sup>†</sup>
+updated_at   |string|Fecha de última modificación de la Anotación<sup>†</sup>
+
+<sup>†</sup> En formato conforme a la [norma ISO 8601](https://es.wikipedia.org/wiki/ISO_8601)
 
 Los siguientes atributos, que pertenecen al modelo de Web Annotation, son obligatorios en el objeto Anotación de Liqen:
 
 Atributo|Tipo  |Descripción
 --------|----  |-----------
-body    |object|Concepto al que se refiere el fragmento de texto.
-body.id |string|ID del concepto
+tags    |array |Conceptos a los que se refiere el fragmento de texto.
 target  |object|Fragmento del texto que tiene el valor del concepto. Explicado a continuación.
+
+Cada elemento del array `tags` a su vez tiene los siguientes atributos
+
+Atributo|Tipo  |Descripción
+--------|----  |-----------
+id      |string|ID del concepto
+title   |string|Nombre descriptivo del concepto
 
 ## Atributo `target`. Seleccionar un fragmento de texto
 
@@ -140,9 +160,11 @@ ID      |ID de la anotación
 ```json
 {
 	"article_id": "1",
-	"body": {
-		"id": "country"
-	},
+	"tags": [
+		{
+			"id": "country"
+		}
+	]
 	"target": {
 		"type": "FragmentSelector",
 		"value": "p1",
@@ -166,8 +188,14 @@ Parámetro |Tipo  |Descripción
 --------- |----  |-----------
 article_id|string|Identificador de artículo al que se añade la anotación
 dimension |string|Dimensión a la que se responde con el fragmento de texto. Valores admitidos: `what`, `who`, `where`, `when`, `why`.
-body.id   |string|ID del concepto, normalmente referencia a un concepto de una ontología
+tags      |array |Conceptos a los que se refiere el fragmento de texto.
 target    |object|Fragmento del texto que tiene el valor del concepto. A diferencia de la especificación del modelo propuesto por la W3C, solo se tienen en cuenta las propiedades `type`, `value` y `refinedBy` de este atributo. La propiedad `source` se calcula con el parámetro `article_id`.
+
+Cada elemento del array `tags` a su vez debe tener los siguientes atributos
+
+Atributo|Tipo  |Descripción
+--------|----  |-----------
+id      |string|ID del concepto
 
 ### Success response
 
@@ -187,9 +215,11 @@ TODO
 
 ```json
 {
-	"body": {
-		"id": "country"
-	}
+	"tags": [
+		{
+			"id": "country"
+		}
+	]
 }
 ```
 
