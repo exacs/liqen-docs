@@ -124,6 +124,7 @@
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
@@ -133,7 +134,9 @@
             </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Turquía"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."</span><span class="w">
         </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-03-05T22:26:12.569669+00:00"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-03-05T22:26:12.569669+00:00"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
@@ -143,9 +146,13 @@
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Country"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
     </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
@@ -156,7 +163,9 @@
             </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"where"</span><span class="w">
+    </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"where"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-03-05T22:26:12.569669+00:00"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-03-05T22:26:12.569669+00:00"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
@@ -191,6 +200,11 @@
 <td>ID del artículo que lleva la anotación</td>
 </tr>
 <tr>
+<td>author</td>
+<td>string</td>
+<td>ID del autor de la anotación</td>
+</tr>
+<tr>
 <td>dimension</td>
 <td>string</td>
 <td>Dimensión a la que se responde con el fragmento de texto. Valores admitidos: <code class="prettyprint">what</code>, <code class="prettyprint">who</code>, <code class="prettyprint">where</code>, <code class="prettyprint">when</code>, <code class="prettyprint">why</code>.</td>
@@ -200,7 +214,19 @@
 <td>string</td>
 <td>ID de la propia anotación (a sí mismo).</td>
 </tr>
+<tr>
+<td>created_at</td>
+<td>string</td>
+<td>Fecha de creación de la Anotación<sup>†</sup></td>
+</tr>
+<tr>
+<td>updated_at</td>
+<td>string</td>
+<td>Fecha de última modificación de la Anotación<sup>†</sup></td>
+</tr>
 </tbody></table>
+
+<p><sup>†</sup> En formato conforme a la <a href="https://es.wikipedia.org/wiki/ISO_8601">norma ISO 8601</a></p>
 
 <p>Los siguientes atributos, que pertenecen al modelo de Web Annotation, son obligatorios en el objeto Anotación de Liqen:</p>
 
@@ -212,19 +238,35 @@
 </tr>
 </thead><tbody>
 <tr>
-<td>body</td>
-<td>object</td>
-<td>Concepto al que se refiere el fragmento de texto.</td>
-</tr>
-<tr>
-<td>body.id</td>
-<td>string</td>
-<td>ID del concepto</td>
+<td>tags</td>
+<td>array</td>
+<td>Conceptos a los que se refiere el fragmento de texto.</td>
 </tr>
 <tr>
 <td>target</td>
 <td>object</td>
 <td>Fragmento del texto que tiene el valor del concepto. Explicado a continuación.</td>
+</tr>
+</tbody></table>
+
+<p>Cada elemento del array <code class="prettyprint">tags</code> a su vez tiene los siguientes atributos</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>string</td>
+<td>ID del concepto</td>
+</tr>
+<tr>
+<td>title</td>
+<td>string</td>
+<td>Nombre descriptivo del concepto</td>
 </tr>
 </tbody></table>
 
@@ -303,10 +345,12 @@
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+    </span><span class="s2">"target"</span><span class="err">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -343,14 +387,30 @@
 <td>Dimensión a la que se responde con el fragmento de texto. Valores admitidos: <code class="prettyprint">what</code>, <code class="prettyprint">who</code>, <code class="prettyprint">where</code>, <code class="prettyprint">when</code>, <code class="prettyprint">why</code>.</td>
 </tr>
 <tr>
-<td>body.id</td>
-<td>string</td>
-<td>ID del concepto, normalmente referencia a un concepto de una ontología</td>
+<td>tags</td>
+<td>array</td>
+<td>Conceptos a los que se refiere el fragmento de texto.</td>
 </tr>
 <tr>
 <td>target</td>
 <td>object</td>
 <td>Fragmento del texto que tiene el valor del concepto. A diferencia de la especificación del modelo propuesto por la W3C, solo se tienen en cuenta las propiedades <code class="prettyprint">type</code>, <code class="prettyprint">value</code> y <code class="prettyprint">refinedBy</code> de este atributo. La propiedad <code class="prettyprint">source</code> se calcula con el parámetro <code class="prettyprint">article_id</code>.</td>
+</tr>
+</tbody></table>
+
+<p>Cada elemento del array <code class="prettyprint">tags</code> a su vez debe tener los siguientes atributos</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>string</td>
+<td>ID del concepto</td>
 </tr>
 </tbody></table>
 
@@ -380,9 +440,11 @@
 <p>Ejemplo de cuerpo de la petición</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+    </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
