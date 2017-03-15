@@ -1,246 +1,321 @@
-# Anotaciones
-
-> Ejemplo de anotación sin concepto ni dimensión. Se destaca el texto "Turquía" de un texto.
+# Objeto Anotación
 
 ```json
 {
-	"id": "1",
-	"article_id": "1",
-	"author": "1",
-	"target": {
-		"type": "FragmentSelector",
-		"value": "p1",
-		"refinedBy": {
-			"type": "TextQuoteSelector",
-			"prefix": "1.- ",
-			"exact": "Turquía",
-			"suffix": " es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."
-		}
-	},
-	"created_at": "2017-03-05T22:26:12.569669+00:00",
-	"updated_at": "2017-03-05T22:26:12.569669+00:00"
+	"id": 1,
+	"author": 5,
+	"article_id": 1,
+	"target": {},
+	"tags": [],
+	"dimension": ""
 }
 ```
 
-> Ejemplo de anotación completo. Se destaca el texto "Turquía" y se vincula con el concepto "País" ([Country](https://schema.org/Country)) y la dimensión "where"
+Una Anotación es una marca realizada en un artículo. Junto a la marca, se aporta información extra: una serie de *conceptos* y una *dimensión*.
 
-```json
-{
-	"id": "1",
-	"article_id": "1",
-	"author": "1",
-	"tags": [
-		{
-			"id": "country",
-			"title": "Country"
-		}
-	],
-	"target": {
-		"type": "FragmentSelector",
-		"value": "p1",
-		"refinedBy": {
-			"type": "TextQuoteSelector",
-			"prefix": "1.- ",
-			"exact": "Turquía",
-			"suffix": " es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."
-		}
-	},
-	"dimension": "where",
-	"created_at": "2017-03-05T22:26:12.569669+00:00",
-	"updated_at": "2017-03-05T22:26:12.569669+00:00"
-}
-```
+Atributos de una anotación:
 
-El recurso **Annotation** describe una Anotación, un fragmento de texto con valor semántico. Se compone de tres elementos fundamentales:
+Atributo    |Tipo   |Descripción
+--------    |----   |-----------
+`id`        |integer|Identificador de la anotación
+`author`    |integer|Identificador del usuario que ha realizado la anotación
+`article_id`|integer|Identificador del artículo marcado por la anotación
+`tags`      |array  |Conceptos que se vinculan con el fragmento de texto. Es un array de enteros, en el que cada elemento corresponde con un identificador de tag.
+`dimension` |string |Dimensión a la que se responde con el fragmento. Puede tener los siguientes valores: `what`, `who`, `when`, `where` o `why`.
 
-1. Un fragmento de texto del que se infiere una información.
-2. Opcionalmente, un concepto al que se refiere el fragmento de texto.
-3. Opcionalmente, una dimensión a la que se responde con el fragmento.
+Además, para *matizar* la marca, se utiliza el atributo `target`:
 
-Se debe entender que el recurso Anotación es una *extensión* o subclase del objeto [Web Annotation][w3-annotation-model].
+Atributo   |Tipo  |Descripción
+--------   |----  |-----------
+`target`   |object|Fragmento de texto del que se infiere una información. Ver sección Target a continuación.
 
-## Atributos
 
-Estos son los atributos del recurso Annotation. La mayoría de atributos pertenecen al modelo de datos descrito en la [especificación W3C de Web Annotation][w3-annotation-model].
-
-En tanto que la Anotación Liqen es una extensión de *Web Annotation*, todos los atributos que tiene dicho objeto, también pueden llegar a pertenecer a la Anotación de Liqen.
-
-Los siguientes atributos son obligatorios en el objeto Anotación de Liqen pero no pertenecen a Web Annotation:
-
-Atributo     |Tipo  |Descripción
---------     |----  |-----------
-article_id   |string|ID del artículo que lleva la anotación
-author       |string|ID del autor de la anotación
-dimension    |string|Dimensión a la que se responde con el fragmento de texto. Valores admitidos: `what`, `who`, `where`, `when`, `why`.
-id           |string|ID de la propia anotación (a sí mismo).
-created_at   |string|Fecha de creación de la Anotación<sup>†</sup>
-updated_at   |string|Fecha de última modificación de la Anotación<sup>†</sup>
-
-<sup>†</sup> En formato conforme a la [norma ISO 8601](https://es.wikipedia.org/wiki/ISO_8601)
-
-Los siguientes atributos, que pertenecen al modelo de Web Annotation, son obligatorios en el objeto Anotación de Liqen:
-
-Atributo|Tipo  |Descripción
---------|----  |-----------
-tags    |array |Conceptos a los que se refiere el fragmento de texto.
-target  |object|Fragmento del texto que tiene el valor del concepto. Explicado a continuación.
-
-Cada elemento del array `tags` a su vez tiene los siguientes atributos
-
-Atributo|Tipo  |Descripción
---------|----  |-----------
-id      |string|ID del concepto
-title   |string|Nombre descriptivo del concepto
-
-## Atributo `target`. Seleccionar un fragmento de texto
+## Target
 
 > **Ejemplo**. Supongamos que encontramos un extracto de texto cuyo HTML es:
 
 ```html
-<p id="p1">En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor. Una olla de algo más vaca que carnero, salpicón...</p>
+<p id="p1">En un lugar de la Mancha, de cuyo nombre no quiero acordarme,
+no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga
+antigua, rocín flaco y galgo corredor. Una olla de algo más vaca que carnero,
+salpicón...</p>
 ```
 
 > Y queremos resaltar el texto "adarga". El objeto que representa esta selección (y por tanto el valor de la propiedad `target` de la anotación) es:
 
 ```json
 {
-	"selector": {
-		"type": "FragmentSelector",
-		"value": "p1",
+	"type": "FragmentSelector",
+	"value": "p1",
+	"refinedBy": {
+		"type": "TextQuoteSelector",
+		"prefix": "lanza en astillero, ",
+		"exact": "adarga",
+		"suffix": " antigua"
+	}
+}
+```
+
+Target representa un texto seleccionado dentro de un documento HTML. Para ello, se utilizan los atributos `type` y `value` para seleccionar un elemento del DOM y después el atributo `refinedBy` para seleccionar un fragmento de texto dentro de dicho elemento
+
+Atributo   |Tipo  |Descripción
+--------   |----  |-----------
+`type`     |string|Tipo de selección. Puede tomar los valores `FragmentSelector`, `XPathSelector` o `CssSelector`.
+`value`    |string|Dependiendo del tipo de selección, este atributo toma valores distintos.
+`refinedBy`|object|Selección de un fragmento dentro del elemento seleccionado con `type` y `value`. Ver [detalles](#refinedBy).
+
+## Selectores
+
+### Selector `FragmentSelector`
+
+> Ejemplo de selector si se quiere elegir un elemento con id `p1`
+
+```json
+{
+	"type": "FragmentSelector",
+	"value": "p1"
+}
+```
+
+Se usa indicando el **id** del elemento HTML en el campo `value`.
+
+### Selector `XPathSelector`
+
+> Ejemplo de selector con `XPath`
+
+```json
+{
+	"type": "XPathSelector",
+	"value": "/html/body/div/div[2]/article/p[35]/p"
+}
+```
+
+Se indica en el campo `value` el selector XPath. [Más información](https://www.w3schools.com/xml/xpath_intro.asp).
+
+### Selector `CssSelector`
+
+> Ejemplo de selector `css`
+
+```json
+{
+	"type": "CssSelector",
+	"value": "#p1"
+}
+```
+
+Se indica en el campo `value` el selector XPath. [Más información](https://www.w3schools.com/cssref/css_selectors.asp).
+
+## <a id="refinedBy"></a> Objeto `refinedBy`
+
+> Ejemplo de objeto `refinedBy`
+
+```json
+{
+	"type": "TextQuoteSelector",
+	"prefix": "lanza en astillero, ",
+	"exact": "adarga",
+	"suffix": " antigua"
+}
+```
+
+Sirve para seleccionar una porción de texto dentro de un elemento HTML.
+
+Atributo   |Tipo  |Descripción
+--------   |----  |-----------
+`type`     |string|Tipo de selector. Debe ser `TextQuoteSelector`.
+`exact`    |string|Texto que se desea seleccionar
+`prefix`   |string|Texto que va inmediatamente antes del fragmento que se desea seleccionar
+`suffix`   |string|Texto que va inmediatamente después del fragmento que se desea seleccionar
+
+Los atributos `prefix` y `suffix` se utilizan para, poder localizar el texto dentro del elemento HTML de forma unívoca.
+
+Además del `TextQuoteSelector` utilizado en Liqen, existen otros selectores como el `TextPositionSelector` pero en esta versión de la API su uso no está permitido.
+
+# Operaciones con Anotaciones
+
+## Obtener todas las anotaciones
+
+```sh
+curl -v https://liqen-core.herokuapp.com/annotations \
+	-H "Content-Type: application/json"
+```
+
+> Respuesta
+
+```json
+[
+	{
+		"article_id": "1",
+		"author": "1",
+		"id": 1
+	},
+	{
+		"title": "País",
+		"author": "1",
+		"id": 2
+	}
+]
+```
+
+### Petición HTTP
+
+`GET https://liqen-core.herokuapp.com/annotations`
+
+### Respuesta HTTP
+
+En caso de éxito se retorna en el cuerpo un JSON, cuyo contenido es un array de objetos anotación.
+
+El objeto anotación devuelto en esta petición solamente tiene los campos `id`, `author` y `article_id`.
+
+## Obtener una anotación
+
+```sh
+curl -v https://liqen-core.herokuapp.com/annotations/1 \
+	-H "Content-Type: application/json"
+```
+
+> Respuesta
+
+```json
+{
+	"target": {
+		"value": "/html/body/div/div[2]/article/p[35]/p",
+		"type": "XPathSelector",
+		"refinedBy": {
+			"type": "TextQuoteSelector",
+			"suffix": " antigua",
+			"prefix": "lanza en astillero, ",
+			"exact": "adarga"
+		}
+	},
+	"tags": [],
+	"id": 6,
+	"author": 1,
+	"article_id": 2
+}
+```
+
+### Petición HTTP
+
+`GET https://liqen-core.herokuapp.com/annotations/<ID>`
+
+### Respuesta
+
+En caso de éxito, se retorna un mensaje en cuyo cuerpo está el JSON con la anotación.
+
+## Crear una anotación sin etiquetas
+
+> Ejemplo de petición
+
+```sh
+curl -v https://liqen-core.herokuapp.com/annotations \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG" \
+	-d '{
+	"article_id": 1,
+	"target": {
+		"type": "XPathSelector",
+		"value": "/html/body/div/div[2]/article/p[35]/p",
 		"refinedBy": {
 			"type": "TextQuoteSelector",
 			"prefix": "lanza en astillero, ",
 			"exact": "adarga",
 			"suffix": " antigua"
 		}
-	}
-}
+	},
+	"dimension": "where"
+}'
 ```
 
-El **fragmento de texto** se debe definir de manera inequívoca mediante la propiedad `target` del objeto Anotación en dos niveles:
+### Petición HTTP
 
+`POST https://liqen-core.herokuapp.com/annotations`
 
-1. El fragmento. Se debe seleccionar un párrafo o sección del documento con un selector de tipo [Fragment](https://www.w3.org/TR/annotation-model/#fragment-selector), [XPath](https://www.w3.org/TR/annotation-model/#xpath-selector) o [CSS](https://www.w3.org/TR/annotation-model/#css-selector) según se indica en las secciones correspondientes de la especificación. Se deben usar las propiedades `type` y `value`.
-2. Texto dentro del fragmento. Se debe seleccionar una frase dentro del fragmento utilizando la propiedad `refinedBy`. Esta propiedad a su vez debe ser un selector de tipo [Text Quote](https://www.w3.org/TR/annotation-model/#text-quote-selector).
+Esta operación require autenticación. En la cabecera, se debe especificar la propiedad `Authorization` con el token de sesión.
 
-## Obtener un listado de anotaciones
+En el cuerpo debe ser un JSON con los atributos:
 
-### HTTP Request
+Atributo    |Tipo   |Descripción
+--------    |----   |-----------
+`article_id`|integer|Identificador de artículo
+`target`    |object |Explicado arriba
+`dimension` |string |*(Opcional)*. Explicado arriba
 
-`GET /annotations`
+### Respuesta
 
-### Response
+Si los parámetros indicados son correctos, se crea un nuevo objeto `Annotation` y se retorna información de dicho objeto.
 
-Array de anotaciones. Devuelve un máximo de 10 elementos.
+En caso de éxito, se retorna un mensaje en el que la cabecera tiene los atributos:
 
-```json
-[
-	{
-		"id": "1"
-	}
-]
+Atributo  |Descripción
+--------  |-----------
+`Location`|URI del anotación creada
+
+Y en el cuerpo un JSON con la anotación creada.
+
+Para posteriormente editar o eliminar la anotación se puede usar la información de la cabecera `Location` o del `id` del cuerpo.
+
+## Eliminar una anotación
+
+```sh
+curl -v -X DELETE https://liqen-core.herokuapp.com/annotations/1 \
+	-H "Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"
 ```
 
-## Obtener una anotación
+### Petición HTTP
 
-### HTTP Request
+`DELETE https://liqen-core.herokuapp.com/annotations/<ID>`
 
-`GET /annotations/<ID>`
+Esta operación require autenticación. En la cabecera, se debe especificar la propiedad `Authorization` con el token de sesión.
 
-### URL Parameters
+### Respuesta HTTP
 
-Atributo|Descripción
---------|-----------
-ID      |ID de la anotación
+En caso de éxito, se retorna un código `204` con el cuerpo y cabecera vacíos
 
-## Crear una anotación
+## Añadir etiquetas a una anotación
 
-> Ejemplo de cuerpo de la petición
+> Ejemplo de petición
 
-```json
-{
-	"article_id": "1",
-	"tags": [
-		{
-			"id": "country"
-		}
-	]
-	"target": {
-		"type": "FragmentSelector",
-		"value": "p1",
-		"refinedBy": {
-			"type": "TextQuoteSelector",
-			"prefix": "1.- ",
-			"exact": "Turquía",
-			"suffix": " es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."
-		}
-	}
-}
+```sh
+curl -v https://liqen-core.herokuapp.com/annotations/1/tags \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG" \
+	-d '{
+	"tag_id": 1
+}'
 ```
 
-`POST /annotations`
+### Petición HTTP
 
-Crea una nueva anotación
+`POST https://liqen-core.herokuapp.com/annotations/<ID>/tags`
 
-### Body Parameters
+Esta operación require autenticación. En la cabecera, se debe especificar la propiedad `Authorization` con el token de sesión.
 
-Parámetro |Tipo  |Descripción
---------- |----  |-----------
-article_id|string|Identificador de artículo al que se añade la anotación
-dimension |string|Dimensión a la que se responde con el fragmento de texto. Valores admitidos: `what`, `who`, `where`, `when`, `why`.
-tags      |array |Conceptos a los que se refiere el fragmento de texto.
-target    |object|Fragmento del texto que tiene el valor del concepto. A diferencia de la especificación del modelo propuesto por la W3C, solo se tienen en cuenta las propiedades `type`, `value` y `refinedBy` de este atributo. La propiedad `source` se calcula con el parámetro `article_id`.
+En el cuerpo debe ser un JSON con los atributos:
 
-Cada elemento del array `tags` a su vez debe tener los siguientes atributos
+Atributo    |Tipo   |Descripción
+--------    |----   |-----------
+`tag_id`    |integer|Identificador de la etiqueta
 
-Atributo|Tipo  |Descripción
---------|----  |-----------
-id      |string|ID del concepto
+### Respuesta
 
-### Success response
+Si los parámetros indicados son correctos, se añade en la anotación indicada el tag correspondiente.
 
-Si la petición tiene éxito, retorna un código 201 (Created) con las cabeceras:
 
-Atributo|Descripción
---------|-----------
-Location|URI de la nueva anotación creada
+## Quitar etiquetas a una anotación
 
-### Errores
+> Ejemplo de petición
 
-TODO
-
-## Modificar una anotación
-
-> Ejemplo de cuerpo de la petición
-
-```json
-{
-	"tags": [
-		{
-			"id": "country"
-		}
-	]
-}
+```sh
+curl -v -X DELETE https://liqen-core.herokuapp.com/annotations/1/tags/1 \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"
 ```
 
-`PATCH /annotations/<ID>`
+### Petición HTTP
 
-Realiza una modificación parcial de la anotación. El servidor internamente, utiliza un algoritmo de *merge* para mezclar el objeto anotación existente y el objeto anotación del cuerpo de la petición PATCH.
+`DELETE https://liqen-core.herokuapp.com/annotations/<ID>/tags/<ID TAG>`
 
-- Si se indica en el cuerpo una propiedad que está presente en el objeto anotación almacenado, el valor se superpone.
-- Si se indica en el cuerpo una propiedad que no existe en el objeto anotación almacenado, se crea la nueva propiedad con el valor asignado.
+Esta operación require autenticación. En la cabecera, se debe especificar la propiedad `Authorization` con el token de sesión.
 
-No es posible eliminar propiedades de objetos utilizando este método.
-
-### Path Parameters
-
-Atributo|Descripción
---------|-----------
-ID      |ID de la anotación
-
-### Body Parameters
-
-Los mismos que los indicados en la sección "Crear una anotación"
-
-
-[w3-annotation-model]: https://www.w3.org/TR/annotation-model
+En caso de éxito, se retorna un código `204` con el cuerpo y cabecera vacíos
