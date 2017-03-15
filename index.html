@@ -112,7 +112,7 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="liqen-core">Liqen Core</h1>
+        <h1 id="liqen-core-beta">Liqen Core (beta)</h1>
 
 <p>El core de Liqen es un sistema de preguntas, respuestas a esas preguntas y anotaciones sobre artículos que forman parte de las respuestas.</p>
 
@@ -120,7 +120,7 @@
 
 <p><img src="http://www.plantuml.com/plantuml/png/RL6nRiCW4Dtv2fJH5L7dREtGFMftYyBPGK9WmP7OYlBlCU00JRfOTuztT-yz2yszfnyEbT10huJIDoNZ5nLgYCMlbGkv4P69nbZagAnfkJoFzzia7tr20vwiouWR0MCb7704sVFKXKa-kXlPBdo31e7MvVsuJ4d4cUi0bVG3Cnw3HVYVFJaOr1mhcBb8ftmO8bGsVAtu7ml5MDPk_0MSxz7MaMC0_-oyf9HCLtryBAmLVCJRCQV64x8snWDjqclmtVj-t-tgI1AyaXkT2M8Q1cHTLHSvHNp9fsDXUhgx_HNo6cOcb_P0Ovu6vET2oXacxSMiTwFLk6krtsn_VRq3" />`</p>
 
-<p>Este documento describe las acciones que ofrece la API de Liqen.</p>
+<p>Este documento describe las acciones que ofrece la API de Liqen. La versión actual dispone de los recursos <code class="prettyprint">Article</code>, <code class="prettyprint">Tag</code> y <code class="prettyprint">Annotations</code></p>
 
           <h1 id="autenticaci-n">Autenticación</h1>
 
@@ -130,14 +130,18 @@
 
 <h2 id="iniciar-sesi-n">Iniciar sesión</h2>
 
+<p>Para solicitar el token de sesión, se realiza una petición POST a <code class="prettyprint">/sessions</code>.</p>
+
 <blockquote>
 <p>Ejemplo de petición</p>
 </blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john@example.com"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"secret"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/sessions <span class="se">\ </span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -d <span class="s1">'{
+        "email": "john@example.com",
+        "password": "secret"
+    }'</span>
+</code></pre>
 
 <blockquote>
 <p>Ejemplo de respuesta</p>
@@ -146,12 +150,10 @@
     </span><span class="nt">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"expires"</span><span class="p">:</span><span class="w"> </span><span class="mi">1489358571</span><span class="p">,</span><span class="w">
     </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5"</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-
-<p>Autentica un usuario en el sistema. Obtiene un token de sesión que se podrá usar en sucesivas peticiones a la API.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
@@ -167,12 +169,12 @@
 </tr>
 </thead><tbody>
 <tr>
-<td>email</td>
+<td><code class="prettyprint">email</code></td>
 <td>string</td>
 <td>E-mail de usuario</td>
 </tr>
 <tr>
-<td>password</td>
+<td><code class="prettyprint">password</code></td>
 <td>string</td>
 <td>Contraseña</td>
 </tr>
@@ -190,46 +192,62 @@
 </tr>
 </thead><tbody>
 <tr>
-<td>access_token</td>
+<td><code class="prettyprint">access_token</code></td>
 <td>string</td>
 <td>Token de sesión</td>
 </tr>
 <tr>
-<td>expires</td>
+<td><code class="prettyprint">expires</code></td>
 <td>integer</td>
 <td>Fecha/hora de caducidad del token en segundos UNIX</td>
 </tr>
 <tr>
-<td>user</td>
+<td><code class="prettyprint">user</code></td>
 <td>object</td>
 <td>Representación del usuario que inicia sesión</td>
 </tr>
 </tbody></table>
 
+<p>Además, la respuesta incluye las siguientes cabeceras:</p>
+
+<table><thead>
+<tr>
+<th>Cabecera</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Authorization</code></td>
+<td>Token de sesión.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">X-Espires</code></td>
+<td>Fecha/hora de caducidad del token en segundos UNIX</td>
+</tr>
+</tbody></table>
+
+<p>Tanto el valor <code class="prettyprint">Authorization</code> de la cabecera como el valor <code class="prettyprint">access_token</code> del cuerpo tienen el mismo valor</p>
+
 <h2 id="peticiones-que-requiren-autenticaci-n">Peticiones que requiren autenticación</h2>
 
 <blockquote>
-<p><strong>Ejemplo</strong>, crear una anotación, que requiere autenticación</p>
+<p><strong>Ejemplo</strong>, crear una anotación:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -v http://&lt;LIQEN_API_ROOT&gt;/annotations <span class="se">\</span>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/annotations <span class="se">\</span>
     -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
     -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span> <span class="se">\</span>
     -d <span class="s1">'{
     "article_id": 1,
-        "tags": [
-            {
-                "id": "country"
-            }
-        ],
+        "tags": [],
         "target": {
             ...
         }
     }'</span>
 </code></pre>
 
-<p>Una vez se posee el token de sesión, se puede utilizar la API REST para realizar las peticiones oportunas.</p>
+<p>Una vez se posee el token de sesión, se debe pasar en la cabecera de cualquier petición que requiera autenticación.</p>
 
-<h3 id="headers">Headers</h3>
+<p>El token debe pasarse como valor del atributo <code class="prettyprint">Authorization</code>.</p>
 
 <table><thead>
 <tr>
@@ -239,82 +257,96 @@
 </tr>
 </thead><tbody>
 <tr>
-<td>Authorization</td>
-<td>Bearer <code class="prettyprint">&lt;Token de Acceso&gt;</code></td>
+<td><code class="prettyprint">Authorization</code></td>
+<td><code class="prettyprint">Bearer &lt;Token de Acceso&gt;</code></td>
 <td>Token de acceso</td>
 </tr>
 </tbody></table>
 
-          <h1 id="anotaciones">Anotaciones</h1>
-
-<blockquote>
-<p>Ejemplo de anotación sin concepto ni dimensión. Se destaca el texto &ldquo;Turquía&rdquo; de un texto.</p>
-</blockquote>
+          <h1 id="art-culos">Artículos</h1>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- "</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Turquía"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-03-05T22:26:12.569669+00:00"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-03-05T22:26:12.569669+00:00"</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chiquito ipsum"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;p&gt;Lorem fistrum a gramenawer qué dise usteer jarl torpedo amatomaa no te digo trigo por no llamarte Rodrigor al ataquerl no puedor.&lt;/p&gt;"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
+<p>Un artículo es un texto sobre el que se pueden crear anotaciones. Un artículo, por ejemplo, puede ser una entrada de un blog.</p>
+
+<h2 id="obtener-todos-los-art-culos">Obtener todos los artículos</h2>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/articles <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+
 <blockquote>
-<p>Ejemplo de anotación completo. Se destaca el texto &ldquo;Turquía&rdquo; y se vincula con el concepto &ldquo;País&rdquo; (<a href="https://schema.org/Country">Country</a>) y la dimensión &ldquo;where&rdquo;</p>
+<p>Respuesta</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chiquito ipsum"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Trainspotting"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">GET https://liqen-core.herokuapp.com/articles</code></p>
+
+<h2 id="obtener-un-art-culo">Obtener un artículo</h2>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/articles/1 <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+
+<blockquote>
+<p>Respuesta</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Country"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- "</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Turquía"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"where"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-03-05T22:26:12.569669+00:00"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-03-05T22:26:12.569669+00:00"</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chiquito ipsum"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;p&gt;Lorem fistrum a gramenawer qué dise usteer jarl torpedo amatomaa no te digo trigo por no llamarte Rodrigor al ataquerl no puedor.&lt;/p&gt;"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>El recurso <strong>Annotation</strong> describe una Anotación, un fragmento de texto con valor semántico. Se compone de tres elementos fundamentales:</p>
+<h3 id="petici-n-http">Petición HTTP</h3>
 
-<ol>
-<li>Un fragmento de texto del que se infiere una información.</li>
-<li>Opcionalmente, un concepto al que se refiere el fragmento de texto.</li>
-<li>Opcionalmente, una dimensión a la que se responde con el fragmento.</li>
-</ol>
+<p><code class="prettyprint">GET https://liqen-core.herokuapp.com/articles/&lt;ID&gt;</code></p>
 
-<p>Se debe entender que el recurso Anotación es una <em>extensión</em> o subclase del objeto <a href="https://www.w3.org/TR/annotation-model">Web Annotation</a>.</p>
+<h3 id="respuesta">Respuesta</h3>
 
-<h2 id="atributos">Atributos</h2>
+<p>En caso de éxito, se retorna un mensaje en cuyo cuerpo está el JSON con el artículo</p>
 
-<p>Estos son los atributos del recurso Annotation. La mayoría de atributos pertenecen al modelo de datos descrito en la <a href="https://www.w3.org/TR/annotation-model">especificación W3C de Web Annotation</a>.</p>
+<h2 id="crear-un-art-culo">Crear un artículo</h2>
+<pre class="highlight shell"><code>curl -v -X POST https://liqen-core.herokuapp.com/articles <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span> <span class="se">\</span>
+    -d <span class="s1">'{
+    "title": "Chiquito ipsum",
+    "body": "&lt;p&gt;Lorem fistrum a gramenawer qué dise usteer jarl torpedo amatomaa no te digo trigo por no llamarte Rodrigor al ataquerl no puedor.&lt;/p&gt;"
+}'</span>
+</code></pre>
 
-<p>En tanto que la Anotación Liqen es una extensión de <em>Web Annotation</em>, todos los atributos que tiene dicho objeto, también pueden llegar a pertenecer a la Anotación de Liqen.</p>
+<blockquote>
+<p>Cuerpo de la respuesta</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chiquito ipsum"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;p&gt;Lorem fistrum a gramenawer qué dise usteer jarl torpedo amatomaa no te digo trigo por no llamarte Rodrigor al ataquerl no puedor.&lt;/p&gt;"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 
-<p>Los siguientes atributos son obligatorios en el objeto Anotación de Liqen pero no pertenecen a Web Annotation:</p>
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">POST https://liqen-core.herokuapp.com/articles</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<p>En el cuerpo debe ser un JSON con los atributos:</p>
 
 <table><thead>
 <tr>
@@ -324,40 +356,53 @@
 </tr>
 </thead><tbody>
 <tr>
-<td>article_id</td>
+<td><code class="prettyprint">title</code></td>
 <td>string</td>
-<td>ID del artículo que lleva la anotación</td>
+<td>Título del artículo</td>
 </tr>
 <tr>
-<td>author</td>
+<td><code class="prettyprint">body</code></td>
 <td>string</td>
-<td>ID del autor de la anotación</td>
-</tr>
-<tr>
-<td>dimension</td>
-<td>string</td>
-<td>Dimensión a la que se responde con el fragmento de texto. Valores admitidos: <code class="prettyprint">what</code>, <code class="prettyprint">who</code>, <code class="prettyprint">where</code>, <code class="prettyprint">when</code>, <code class="prettyprint">why</code>.</td>
-</tr>
-<tr>
-<td>id</td>
-<td>string</td>
-<td>ID de la propia anotación (a sí mismo).</td>
-</tr>
-<tr>
-<td>created_at</td>
-<td>string</td>
-<td>Fecha de creación de la Anotación<sup>†</sup></td>
-</tr>
-<tr>
-<td>updated_at</td>
-<td>string</td>
-<td>Fecha de última modificación de la Anotación<sup>†</sup></td>
+<td>Contenido del artículo</td>
 </tr>
 </tbody></table>
 
-<p><sup>†</sup> En formato conforme a la <a href="https://es.wikipedia.org/wiki/ISO_8601">norma ISO 8601</a></p>
+<h3 id="respuesta-http">Respuesta HTTP</h3>
 
-<p>Los siguientes atributos, que pertenecen al modelo de Web Annotation, son obligatorios en el objeto Anotación de Liqen:</p>
+<p>En caso de éxito, se retorna un mensaje en el que la cabecera tiene los atributos:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Location</code></td>
+<td>URI del artículo creado</td>
+</tr>
+</tbody></table>
+
+<p>Y en el cuerpo un JSON con el artículo creado.</p>
+
+<p>Para posteriormente editar o eliminar el artículo se puede usar la información de la cabecera <code class="prettyprint">Location</code> o del <code class="prettyprint">id</code> del cuerpo.</p>
+
+<h2 id="editar-un-art-culo">Editar un artículo</h2>
+<pre class="highlight shell"><code>curl -v -X PATCH https://liqen-core.herokuapp.com/articles/1 <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span> <span class="se">\</span>
+    -d <span class="s1">'{
+    "title": "Chiquito!!!"
+}'</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">PATCH https://liqen-core.herokuapp.com/articles/&lt;ID&gt;</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<p>En el cuerpo debe ser un JSON con los atributos siguientes. Todos son opcionales.</p>
 
 <table><thead>
 <tr>
@@ -367,18 +412,251 @@
 </tr>
 </thead><tbody>
 <tr>
-<td>tags</td>
+<td><code class="prettyprint">title</code></td>
+<td>string</td>
+<td>Título del artículo</td>
+</tr>
+<tr>
+<td><code class="prettyprint">body</code></td>
+<td>string</td>
+<td>Contenido del artículo</td>
+</tr>
+</tbody></table>
+
+<h3 id="respuesta-http">Respuesta HTTP</h3>
+
+<p>En caso de éxito, se retorna un mensaje en cuyo cuerpo está el JSON con el artículo modificado</p>
+
+<h2 id="eliminar-un-art-culo">Eliminar un artículo</h2>
+<pre class="highlight shell"><code>curl -v -X DELETE https://liqen-core.herokuapp.com/articles/1 <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">DELETE https://liqen-core.herokuapp.com/articles/&lt;ID&gt;</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<h3 id="respuesta-http">Respuesta HTTP</h3>
+
+<p>En caso de éxito, se retorna un código <code class="prettyprint">204</code> con el cuerpo y cabecera vacíos</p>
+
+          <h1 id="etiquetas">Etiquetas</h1>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Persona"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Una etiqueta es un concepto que, eventualmente, está vinculado a una ontología.</p>
+
+<h2 id="obtener-todas-las-etiquetas">Obtener todas las etiquetas</h2>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/tags <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+
+<blockquote>
+<p>Respuesta</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Persona"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"País"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">GET https://liqen-core.herokuapp.com/tags</code></p>
+
+<h2 id="obtener-una-etiqueta">Obtener una etiqueta</h2>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/tags/1 <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+
+<blockquote>
+<p>Respuesta</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Persona"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">GET https://liqen-core.herokuapp.com/tags/&lt;ID&gt;</code></p>
+
+<h3 id="respuesta">Respuesta</h3>
+
+<p>En caso de éxito, se retorna un mensaje en cuyo cuerpo está el JSON con la etiqueta.</p>
+
+<h2 id="crear-una-etiqueta">Crear una etiqueta</h2>
+<pre class="highlight shell"><code>curl -v -X POST https://liqen-core.herokuapp.com/tags <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span> <span class="se">\</span>
+    -d <span class="s1">'{
+    "title": "Continente"
+}'</span>
+</code></pre>
+
+<blockquote>
+<p>Cuerpo de la respuesta</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Continente"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">POST https://liqen-core.herokuapp.com/tags</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<p>En el cuerpo debe ser un JSON con los atributos:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">title</code></td>
+<td>string</td>
+<td>Nombre descriptivo de la etiqueta</td>
+</tr>
+</tbody></table>
+
+<h3 id="respuesta-http">Respuesta HTTP</h3>
+
+<p>En caso de éxito, se retorna un mensaje en el que la cabecera tiene los atributos:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Location</code></td>
+<td>URI la etiqueta creado</td>
+</tr>
+</tbody></table>
+
+<p>Y en el cuerpo un JSON con la etiqueta creado.</p>
+
+<p>Para posteriormente editar o eliminar la etiqueta se puede usar la información de la cabecera <code class="prettyprint">Location</code> o del <code class="prettyprint">id</code> del cuerpo.</p>
+
+<h2 id="editar-una-etiqueta">Editar una etiqueta</h2>
+<pre class="highlight shell"><code>curl -v -X PATCH https://liqen-core.herokuapp.com/tags/3 <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span> <span class="se">\</span>
+    -d <span class="s1">'{
+    "title": "País"
+}'</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">PATCH https://liqen-core.herokuapp.com/tags/&lt;ID&gt;</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<p>En el cuerpo debe ser un JSON con los atributos siguientes. Todos son opcionales.</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">title</code></td>
+<td>string</td>
+<td>Nombre descriptivo de la etiqueta</td>
+</tr>
+</tbody></table>
+
+<h3 id="respuesta-http">Respuesta HTTP</h3>
+
+<p>En caso de éxito, se retorna un mensaje en cuyo cuerpo está el JSON con la etiqueta modificada</p>
+
+<h2 id="eliminar-una-etiqueta">Eliminar una etiqueta</h2>
+<pre class="highlight shell"><code>curl -v -X DELETE https://liqen-core.herokuapp.com/tags/1 <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">DELETE https://liqen-core.herokuapp.com/tags/&lt;ID&gt;</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<h3 id="respuesta-http">Respuesta HTTP</h3>
+
+<p>En caso de éxito, se retorna un código <code class="prettyprint">204</code> con el cuerpo y cabecera vacíos</p>
+
+          <h1 id="objeto-anotaci-n">Objeto Anotación</h1>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Una Anotación es una marca realizada en un artículo. Junto a la marca, se aporta información extra: una serie de <em>conceptos</em> y una <em>dimensión</em>.</p>
+
+<p>Atributos de una anotación:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">id</code></td>
+<td>integer</td>
+<td>Identificador de la anotación</td>
+</tr>
+<tr>
+<td><code class="prettyprint">author</code></td>
+<td>integer</td>
+<td>Identificador del usuario que ha realizado la anotación</td>
+</tr>
+<tr>
+<td><code class="prettyprint">article_id</code></td>
+<td>integer</td>
+<td>Identificador del artículo marcado por la anotación</td>
+</tr>
+<tr>
+<td><code class="prettyprint">tags</code></td>
 <td>array</td>
-<td>Conceptos a los que se refiere el fragmento de texto.</td>
+<td>Conceptos que se vinculan con el fragmento de texto. Es un array de enteros, en el que cada elemento corresponde con un identificador de tag.</td>
 </tr>
 <tr>
-<td>target</td>
-<td>object</td>
-<td>Fragmento del texto que tiene el valor del concepto. Explicado a continuación.</td>
+<td><code class="prettyprint">dimension</code></td>
+<td>string</td>
+<td>Dimensión a la que se responde con el fragmento. Puede tener los siguientes valores: <code class="prettyprint">what</code>, <code class="prettyprint">who</code>, <code class="prettyprint">when</code>, <code class="prettyprint">where</code> o <code class="prettyprint">why</code>.</td>
 </tr>
 </tbody></table>
 
-<p>Cada elemento del array <code class="prettyprint">tags</code> a su vez tiene los siguientes atributos</p>
+<p>Además, para <em>matizar</em> la marca, se utiliza el atributo <code class="prettyprint">target</code>:</p>
 
 <table><thead>
 <tr>
@@ -388,164 +666,282 @@
 </tr>
 </thead><tbody>
 <tr>
-<td>id</td>
-<td>string</td>
-<td>ID del concepto</td>
-</tr>
-<tr>
-<td>title</td>
-<td>string</td>
-<td>Nombre descriptivo del concepto</td>
+<td><code class="prettyprint">target</code></td>
+<td>object</td>
+<td>Fragmento de texto del que se infiere una información. Ver sección Target a continuación.</td>
 </tr>
 </tbody></table>
 
-<h2 id="atributo-target-seleccionar-un-fragmento-de-texto">Atributo <code class="prettyprint">target</code>. Seleccionar un fragmento de texto</h2>
+<h2 id="target">Target</h2>
 
 <blockquote>
 <p><strong>Ejemplo</strong>. Supongamos que encontramos un extracto de texto cuyo HTML es:</p>
 </blockquote>
-<pre class="highlight html"><code><span class="nt">&lt;p</span> <span class="na">id=</span><span class="s">"p1"</span><span class="nt">&gt;</span>En un lugar de la Mancha, de cuyo nombre no quiero acordarme, no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga antigua, rocín flaco y galgo corredor. Una olla de algo más vaca que carnero, salpicón...<span class="nt">&lt;/p&gt;</span>
+<pre class="highlight html"><code><span class="nt">&lt;p</span> <span class="na">id=</span><span class="s">"p1"</span><span class="nt">&gt;</span>En un lugar de la Mancha, de cuyo nombre no quiero acordarme,
+no ha mucho tiempo que vivía un hidalgo de los de lanza en astillero, adarga
+antigua, rocín flaco y galgo corredor. Una olla de algo más vaca que carnero,
+salpicón...<span class="nt">&lt;/p&gt;</span>
 </code></pre>
 
 <blockquote>
 <p>Y queremos resaltar el texto &ldquo;adarga&rdquo;. El objeto que representa esta selección (y por tanto el valor de la propiedad <code class="prettyprint">target</code> de la anotación) es:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"selector"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lanza en astillero, "</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"adarga"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" antigua"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lanza en astillero, "</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"adarga"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" antigua"</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>El <strong>fragmento de texto</strong> se debe definir de manera inequívoca mediante la propiedad <code class="prettyprint">target</code> del objeto Anotación en dos niveles:</p>
+<p>Target representa un texto seleccionado dentro de un documento HTML. Para ello, se utilizan los atributos <code class="prettyprint">type</code> y <code class="prettyprint">value</code> para seleccionar un elemento del DOM y después el atributo <code class="prettyprint">refinedBy</code> para seleccionar un fragmento de texto dentro de dicho elemento</p>
 
-<ol>
-<li>El fragmento. Se debe seleccionar un párrafo o sección del documento con un selector de tipo <a href="https://www.w3.org/TR/annotation-model/#fragment-selector">Fragment</a>, <a href="https://www.w3.org/TR/annotation-model/#xpath-selector">XPath</a> o <a href="https://www.w3.org/TR/annotation-model/#css-selector">CSS</a> según se indica en las secciones correspondientes de la especificación. Se deben usar las propiedades <code class="prettyprint">type</code> y <code class="prettyprint">value</code>.</li>
-<li>Texto dentro del fragmento. Se debe seleccionar una frase dentro del fragmento utilizando la propiedad <code class="prettyprint">refinedBy</code>. Esta propiedad a su vez debe ser un selector de tipo <a href="https://www.w3.org/TR/annotation-model/#text-quote-selector">Text Quote</a>.</li>
-</ol>
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">type</code></td>
+<td>string</td>
+<td>Tipo de selección. Puede tomar los valores <code class="prettyprint">FragmentSelector</code>, <code class="prettyprint">XPathSelector</code> o <code class="prettyprint">CssSelector</code>.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">value</code></td>
+<td>string</td>
+<td>Dependiendo del tipo de selección, este atributo toma valores distintos.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">refinedBy</code></td>
+<td>object</td>
+<td>Selección de un fragmento dentro del elemento seleccionado con <code class="prettyprint">type</code> y <code class="prettyprint">value</code>. Ver <a href="#refinedBy">detalles</a>.</td>
+</tr>
+</tbody></table>
 
-<h2 id="obtener-un-listado-de-anotaciones">Obtener un listado de anotaciones</h2>
+<h2 id="selectores">Selectores</h2>
 
-<h3 id="http-request">HTTP Request</h3>
+<h3 id="selector-fragmentselector">Selector <code class="prettyprint">FragmentSelector</code></h3>
 
-<p><code class="prettyprint">GET /annotations</code></p>
+<blockquote>
+<p>Ejemplo de selector si se quiere elegir un elemento con id <code class="prettyprint">p1</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 
-<h3 id="response">Response</h3>
+<p>Se usa indicando el <strong>id</strong> del elemento HTML en el campo <code class="prettyprint">value</code>.</p>
 
-<p>Array de anotaciones. Devuelve un máximo de 10 elementos.</p>
+<h3 id="selector-xpathselector">Selector <code class="prettyprint">XPathSelector</code></h3>
+
+<blockquote>
+<p>Ejemplo de selector con <code class="prettyprint">XPath</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"XPathSelector"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/html/body/div/div[2]/article/p[35]/p"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Se indica en el campo <code class="prettyprint">value</code> el selector XPath. <a href="https://www.w3schools.com/xml/xpath_intro.asp">Más información</a>.</p>
+
+<h3 id="selector-cssselector">Selector <code class="prettyprint">CssSelector</code></h3>
+
+<blockquote>
+<p>Ejemplo de selector <code class="prettyprint">css</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CssSelector"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#p1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Se indica en el campo <code class="prettyprint">value</code> el selector XPath. <a href="https://www.w3schools.com/cssref/css_selectors.asp">Más información</a>.</p>
+
+<h2 id="objeto-refinedby"><a id="refinedBy"></a> Objeto <code class="prettyprint">refinedBy</code></h2>
+
+<blockquote>
+<p>Ejemplo de objeto <code class="prettyprint">refinedBy</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lanza en astillero, "</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"adarga"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" antigua"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Sirve para seleccionar una porción de texto dentro de un elemento HTML.</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">type</code></td>
+<td>string</td>
+<td>Tipo de selector. Debe ser <code class="prettyprint">TextQuoteSelector</code>.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">exact</code></td>
+<td>string</td>
+<td>Texto que se desea seleccionar</td>
+</tr>
+<tr>
+<td><code class="prettyprint">prefix</code></td>
+<td>string</td>
+<td>Texto que va inmediatamente antes del fragmento que se desea seleccionar</td>
+</tr>
+<tr>
+<td><code class="prettyprint">suffix</code></td>
+<td>string</td>
+<td>Texto que va inmediatamente después del fragmento que se desea seleccionar</td>
+</tr>
+</tbody></table>
+
+<p>Los atributos <code class="prettyprint">prefix</code> y <code class="prettyprint">suffix</code> se utilizan para, poder localizar el texto dentro del elemento HTML de forma unívoca.</p>
+
+<p>Además del <code class="prettyprint">TextQuoteSelector</code> utilizado en Liqen, existen otros selectores como el <code class="prettyprint">TextPositionSelector</code> pero en esta versión de la API su uso no está permitido.</p>
+
+<h1 id="operaciones-con-anotaciones">Operaciones con Anotaciones</h1>
+
+<h2 id="obtener-todas-las-anotaciones">Obtener todas las anotaciones</h2>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/annotations <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+
+<blockquote>
+<p>Respuesta</p>
+</blockquote>
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+        </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"País"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
 
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">GET https://liqen-core.herokuapp.com/annotations</code></p>
+
+<h3 id="respuesta-http">Respuesta HTTP</h3>
+
+<p>En caso de éxito se retorna en el cuerpo un JSON, cuyo contenido es un array de objetos anotación.</p>
+
+<p>El objeto anotación devuelto en esta petición solamente tiene los campos <code class="prettyprint">id</code>, <code class="prettyprint">author</code> y <code class="prettyprint">article_id</code>.</p>
+
 <h2 id="obtener-una-anotaci-n">Obtener una anotación</h2>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><code class="prettyprint">GET /annotations/&lt;ID&gt;</code></p>
-
-<h3 id="url-parameters">URL Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Atributo</th>
-<th>Descripción</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>ID de la anotación</td>
-</tr>
-</tbody></table>
-
-<h2 id="crear-una-anotaci-n">Crear una anotación</h2>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/annotations/1 <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
 
 <blockquote>
-<p>Ejemplo de cuerpo de la petición</p>
+<p>Respuesta</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-    </span><span class="s2">"target"</span><span class="err">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/html/body/div/div[2]/article/p[35]/p"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"XPathSelector"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- "</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Turquía"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."</span><span class="w">
+            </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" antigua"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lanza en astillero, "</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"adarga"</span><span class="w">
         </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"author"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p><code class="prettyprint">POST /annotations</code></p>
+<h3 id="petici-n-http">Petición HTTP</h3>
 
-<p>Crea una nueva anotación</p>
+<p><code class="prettyprint">GET https://liqen-core.herokuapp.com/annotations/&lt;ID&gt;</code></p>
 
-<h3 id="body-parameters">Body Parameters</h3>
+<h3 id="respuesta">Respuesta</h3>
+
+<p>En caso de éxito, se retorna un mensaje en cuyo cuerpo está el JSON con la anotación.</p>
+
+<h2 id="crear-una-anotaci-n-sin-etiquetas">Crear una anotación sin etiquetas</h2>
+
+<blockquote>
+<p>Ejemplo de petición</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/annotations <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span> <span class="se">\</span>
+    -d <span class="s1">'{
+    "article_id": 1,
+    "target": {
+        "type": "XPathSelector",
+        "value": "/html/body/div/div[2]/article/p[35]/p",
+        "refinedBy": {
+            "type": "TextQuoteSelector",
+            "prefix": "lanza en astillero, ",
+            "exact": "adarga",
+            "suffix": " antigua"
+        }
+    },
+    "dimension": "where"
+}'</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">POST https://liqen-core.herokuapp.com/annotations</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<p>En el cuerpo debe ser un JSON con los atributos:</p>
 
 <table><thead>
 <tr>
-<th>Parámetro</th>
+<th>Atributo</th>
 <th>Tipo</th>
 <th>Descripción</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>article_id</td>
-<td>string</td>
-<td>Identificador de artículo al que se añade la anotación</td>
+<td><code class="prettyprint">article_id</code></td>
+<td>integer</td>
+<td>Identificador de artículo</td>
 </tr>
 <tr>
-<td>dimension</td>
-<td>string</td>
-<td>Dimensión a la que se responde con el fragmento de texto. Valores admitidos: <code class="prettyprint">what</code>, <code class="prettyprint">who</code>, <code class="prettyprint">where</code>, <code class="prettyprint">when</code>, <code class="prettyprint">why</code>.</td>
-</tr>
-<tr>
-<td>tags</td>
-<td>array</td>
-<td>Conceptos a los que se refiere el fragmento de texto.</td>
-</tr>
-<tr>
-<td>target</td>
+<td><code class="prettyprint">target</code></td>
 <td>object</td>
-<td>Fragmento del texto que tiene el valor del concepto. A diferencia de la especificación del modelo propuesto por la W3C, solo se tienen en cuenta las propiedades <code class="prettyprint">type</code>, <code class="prettyprint">value</code> y <code class="prettyprint">refinedBy</code> de este atributo. La propiedad <code class="prettyprint">source</code> se calcula con el parámetro <code class="prettyprint">article_id</code>.</td>
+<td>Explicado arriba</td>
 </tr>
-</tbody></table>
-
-<p>Cada elemento del array <code class="prettyprint">tags</code> a su vez debe tener los siguientes atributos</p>
-
-<table><thead>
 <tr>
-<th>Atributo</th>
-<th>Tipo</th>
-<th>Descripción</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>id</td>
+<td><code class="prettyprint">dimension</code></td>
 <td>string</td>
-<td>ID del concepto</td>
+<td><em>(Opcional)</em>. Explicado arriba</td>
 </tr>
 </tbody></table>
 
-<h3 id="success-response">Success response</h3>
+<h3 id="respuesta">Respuesta</h3>
 
-<p>Si la petición tiene éxito, retorna un código 201 (Created) con las cabeceras:</p>
+<p>Si los parámetros indicados son correctos, se crea un nuevo objeto <code class="prettyprint">Annotation</code> y se retorna información de dicho objeto.</p>
+
+<p>En caso de éxito, se retorna un mensaje en el que la cabecera tiene los atributos:</p>
 
 <table><thead>
 <tr>
@@ -554,117 +950,50 @@
 </tr>
 </thead><tbody>
 <tr>
-<td>Location</td>
-<td>URI de la nueva anotación creada</td>
+<td><code class="prettyprint">Location</code></td>
+<td>URI del anotación creada</td>
 </tr>
 </tbody></table>
 
-<h3 id="errores">Errores</h3>
+<p>Y en el cuerpo un JSON con la anotación creada.</p>
 
-<p>TODO</p>
+<p>Para posteriormente editar o eliminar la anotación se puede usar la información de la cabecera <code class="prettyprint">Location</code> o del <code class="prettyprint">id</code> del cuerpo.</p>
 
-<h2 id="modificar-una-anotaci-n">Modificar una anotación</h2>
+<h2 id="eliminar-una-anotaci-n">Eliminar una anotación</h2>
+<pre class="highlight shell"><code>curl -v -X DELETE https://liqen-core.herokuapp.com/annotations/1 <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">DELETE https://liqen-core.herokuapp.com/annotations/&lt;ID&gt;</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<h3 id="respuesta-http">Respuesta HTTP</h3>
+
+<p>En caso de éxito, se retorna un código <code class="prettyprint">204</code> con el cuerpo y cabecera vacíos</p>
+
+<h2 id="a-adir-etiquetas-a-una-anotaci-n">Añadir etiquetas a una anotación</h2>
 
 <blockquote>
-<p>Ejemplo de cuerpo de la petición</p>
+<p>Ejemplo de petición</p>
 </blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/annotations/1/tags <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span> <span class="se">\</span>
+    -d <span class="s1">'{
+    "tag_id": 1
+}'</span>
+</code></pre>
 
-<p><code class="prettyprint">PATCH /annotations/&lt;ID&gt;</code></p>
+<h3 id="petici-n-http">Petición HTTP</h3>
 
-<p>Realiza una modificación parcial de la anotación. El servidor internamente, utiliza un algoritmo de <em>merge</em> para mezclar el objeto anotación existente y el objeto anotación del cuerpo de la petición PATCH.</p>
+<p><code class="prettyprint">POST https://liqen-core.herokuapp.com/annotations/&lt;ID&gt;/tags</code></p>
 
-<ul>
-<li>Si se indica en el cuerpo una propiedad que está presente en el objeto anotación almacenado, el valor se superpone.</li>
-<li>Si se indica en el cuerpo una propiedad que no existe en el objeto anotación almacenado, se crea la nueva propiedad con el valor asignado.</li>
-</ul>
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
 
-<p>No es posible eliminar propiedades de objetos utilizando este método.</p>
-
-<h3 id="path-parameters">Path Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Atributo</th>
-<th>Descripción</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>ID de la anotación</td>
-</tr>
-</tbody></table>
-
-<h3 id="body-parameters">Body Parameters</h3>
-
-<p>Los mismos que los indicados en la sección &ldquo;Crear una anotación&rdquo;</p>
-
-          <h1 id="hechos">Hechos</h1>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"answers_to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"annotations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- "</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Turquía"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"where"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amount"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- Turquía es el país que más refugiados alberga --"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.541.352"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"--, con una población de unos 80 millones de personas."</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"what"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<p>Un hecho se define como un conjunto de Anotaciones que componen una única unidad informativa.</p>
-
-<p>Por ejemplo, el texto siguiente:</p>
-
-<p>&ldquo;1.- Turquía es el país que más refugiados alberga &ndash;2.541.352&ndash;, con una población de unos 80 millones de personas.&rdquo;</p>
-
-<p>Puede tener dos anotaciones:</p>
-
-<ul>
-<li>&ldquo;Turquía&rdquo; con la etiqueta <em>país</em> y la dimensión <em>where</em></li>
-<li>&ldquo;2.541.352&rdquo; con la etiqueta <em>amount</em> y la dimensión <em>what</em></li>
-</ul>
-
-<h2 id="atributos">Atributos</h2>
+<p>En el cuerpo debe ser un JSON con los atributos:</p>
 
 <table><thead>
 <tr>
@@ -674,169 +1003,67 @@
 </tr>
 </thead><tbody>
 <tr>
-<td>id</td>
-<td>string</td>
-<td>Identificador del propio recurso (el hecho)</td>
-</tr>
-<tr>
-<td>answers_to</td>
-<td>object</td>
-<td><em>(opcional)</em> ID de la pregunta a la que responde el hecho</td>
+<td><code class="prettyprint">tag_id</code></td>
+<td>integer</td>
+<td>Identificador de la etiqueta</td>
 </tr>
 </tbody></table>
 
-<h2 id="obtener-una-lista-de-hechos">Obtener una lista de hechos</h2>
+<h3 id="respuesta">Respuesta</h3>
 
-<p><code class="prettyprint">GET /facts/</code></p>
+<p>Si los parámetros indicados son correctos, se añade en la anotación indicada el tag correspondiente.</p>
 
-<p>TODO</p>
-
-<h2 id="obtener-un-hecho">Obtener un hecho</h2>
-
-<p><code class="prettyprint">GET /facts/&lt;ID&gt;</code></p>
-
-<p>TODO</p>
-
-<h2 id="crear-un-hecho-y-anotaciones">Crear un hecho y anotaciones</h2>
+<h2 id="quitar-etiquetas-a-una-anotaci-n">Quitar etiquetas a una anotación</h2>
 
 <blockquote>
-<p>Ejemplo de cuerpo de la petición en la que se crean, junto con el hecho, dos anotaciones</p>
+<p>Ejemplo de petición</p>
 </blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"answers_to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"annotations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"country"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- "</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Turquía"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">" es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"where"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"article_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FragmentSelector"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p1"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"refinedBy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TextQuoteSelector"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.- Turquía es el país que más refugiados alberga --"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"exact"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.541.352"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"suffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"--, con una población de unos 80 millones de personas."</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"dimension"</span><span class="p">:</span><span class="w"> </span><span class="s2">"what"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
+<pre class="highlight shell"><code>curl -v -X DELETE https://liqen-core.herokuapp.com/annotations/1/tags/1 <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span>
+</code></pre>
 
-<p><code class="prettyprint">POST /facts</code></p>
+<h3 id="petici-n-http">Petición HTTP</h3>
 
-<p>Crea un hecho nuevo. Este hecho se puede crear a partir de anotaciones existentes o crear nuevas anotaciones para incluirlas en este nuevo hecho.</p>
+<p><code class="prettyprint">DELETE https://liqen-core.herokuapp.com/annotations/&lt;ID&gt;/tags/&lt;ID TAG&gt;</code></p>
 
-<h3 id="body-parameters">Body Parameters</h3>
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<p>En caso de éxito, se retorna un código <code class="prettyprint">204</code> con el cuerpo y cabecera vacíos</p>
+
+          <h1 id="errores">Errores</h1>
+
+<p>Todos los recursos Liqen, pueden devolver los siguientes errores</p>
 
 <table><thead>
 <tr>
-<th>Parámetro</th>
-<th>Tipo</th>
-<th>Descripción</th>
+<th>Error Code</th>
+<th>Meaning</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>answers_to</td>
-<td>string</td>
-<td>Identificador de la pregunta a la que responderá el hecho.</td>
+<td>400</td>
+<td>Bad Request – Request incorrecto</td>
 </tr>
 <tr>
-<td>annotations</td>
-<td>array</td>
-<td>Lista de anotaciones</td>
+<td>401</td>
+<td>Unauthorized – El token indicado no es válido</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found – El recurso al que se intenta acceder no existe</td>
+</tr>
+<tr>
+<td>422</td>
+<td>Unprocessable Entity – Error en el cuerpo de la petición</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Error del servidor</td>
 </tr>
 </tbody></table>
 
-<p>os elementos del array <code class="prettyprint">annotations</code> son los objetos que se pasarían al método &ldquo;Crear una anotación&rdquo;.</p>
-
-<h3 id="success-response">Success response</h3>
-
-<p>Si la petición tiene éxito, retorna un código 201 (Created) con las cabeceras</p>
-
-<table><thead>
-<tr>
-<th>Atributo</th>
-<th>Descripción</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>Location</td>
-<td>URI del nuevo hecho creado</td>
-</tr>
-</tbody></table>
-
-<p>En el cuerpo de la petición se devuelve el objeto completo del hecho recién creado, que incluye también los IDs asignados a las anotaciones creadas.</p>
-
-<h2 id="crear-un-hecho-con-anotaciones-existentes">Crear un hecho con anotaciones existentes</h2>
-
-<blockquote>
-<p>Ejemplo en el que se crea un hecho que engloba las anotaciones 1 y 2</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"answers_to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"annotations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2"</span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<h3 id="body-parameters">Body Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parámetro</th>
-<th>Tipo</th>
-<th>Descripción</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>answers_to</td>
-<td>string</td>
-<td>Identificador de la pregunta a la que responderá el hecho.</td>
-</tr>
-<tr>
-<td>annotations</td>
-<td>array</td>
-<td>Lista de anotaciones</td>
-</tr>
-</tbody></table>
-
-<p>Los elementos del array <code class="prettyprint">annotations</code> son strings, siendo cada uno el ID de la anotación correspondiente.</p>
-
-<h3 id="success-response">Success response</h3>
-
-<p>Si la petición tiene éxito, retorna un código 201 (Created) con las cabeceras</p>
-
-<table><thead>
-<tr>
-<th>Atributo</th>
-<th>Descripción</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>Location</td>
-<td>URI del nuevo hecho creado</td>
-</tr>
-</tbody></table>
+<p>Además del código de error, la mayoría de las veces se indica, en el cuerpo de la respuesta, información extra detallando el error.</p>
 
       </div>
       <div class="dark-box">
