@@ -120,8 +120,6 @@
 
 <p><img src="http://www.plantuml.com/plantuml/png/RL6nRiCW4Dtv2fJH5L7dREtGFMftYyBPGK9WmP7OYlBlCU00JRfOTuztT-yz2yszfnyEbT10huJIDoNZ5nLgYCMlbGkv4P69nbZagAnfkJoFzzia7tr20vwiouWR0MCb7704sVFKXKa-kXlPBdo31e7MvVsuJ4d4cUi0bVG3Cnw3HVYVFJaOr1mhcBb8ftmO8bGsVAtu7ml5MDPk_0MSxz7MaMC0_-oyf9HCLtryBAmLVCJRCQV64x8snWDjqclmtVj-t-tgI1AyaXkT2M8Q1cHTLHSvHNp9fsDXUhgx_HNo6cOcb_P0Ovu6vET2oXacxSMiTwFLk6krtsn_VRq3" />`</p>
 
-<p>Este documento describe las acciones que ofrece la API de Liqen. La versión actual dispone de los recursos <code class="prettyprint">Article</code>, <code class="prettyprint">Tag</code> y <code class="prettyprint">Annotations</code></p>
-
           <h1 id="autenticaci-n">Autenticación</h1>
 
 <p>La API de Liqen, para determinadas acciones, exige que el cliente esté correctamente autenticado.</p>
@@ -1026,6 +1024,407 @@ salpicón...<span class="nt">&lt;/p&gt;</span>
 <h3 id="petici-n-http">Petición HTTP</h3>
 
 <p><code class="prettyprint">DELETE https://liqen-core.herokuapp.com/annotations/&lt;ID&gt;/tags/&lt;ID TAG&gt;</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<p>En caso de éxito, se retorna un código <code class="prettyprint">204</code> con el cuerpo y cabecera vacíos</p>
+
+          <h1 id="preguntas">Preguntas</h1>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Esto es una pregunta de ejemplo"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h2 id="obtener-todas-las-preguntas">Obtener todas las preguntas</h2>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/questions <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+
+<blockquote>
+<p>Respuesta</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"¿Quién ganó la Liga en la temporada 2015-16?"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">GET https://liqen-core.herokuapp.com/questions</code></p>
+
+<h2 id="obtener-una-anotaci-n">Obtener una anotación</h2>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/questions/1 <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+
+<blockquote>
+<p>Respuesta</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"¿Quién ganó la Liga en la temporada 2015-16?"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">GET https://liqen-core.herokuapp.com/questions/&lt;ID&gt;</code></p>
+
+<h3 id="respuesta">Respuesta</h3>
+
+<p>En caso de éxito, se retorna un mensaje en cuyo cuerpo está el JSON con la pregunta.</p>
+
+<h2 id="crear-una-pregunta-sin-etiquetas">Crear una pregunta sin etiquetas</h2>
+
+<blockquote>
+<p>Ejemplo de petición</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/questions <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span> <span class="se">\</span>
+    -d <span class="s1">'{
+    "title": "¿Dónde nació Cristobal Colón?"
+}'</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">POST https://liqen-core.herokuapp.com/questions</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<p>En el cuerpo debe ser un JSON con los atributos:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">title</code></td>
+<td>string</td>
+<td>Pregunta</td>
+</tr>
+</tbody></table>
+
+<h3 id="respuesta">Respuesta</h3>
+
+<p>Si los parámetros indicados son correctos, se crea un nuevo objeto <code class="prettyprint">Question</code> y se retorna información de dicho objeto.</p>
+
+<p>En caso de éxito, se retorna un mensaje en el que la cabecera tiene los atributos:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Location</code></td>
+<td>URI de la pregunta creada</td>
+</tr>
+</tbody></table>
+
+<p>Y en el cuerpo un JSON con la pregunta creada.</p>
+
+<p>Para posteriormente editar o eliminar la pregunta se puede usar la información de la cabecera <code class="prettyprint">Location</code> o del <code class="prettyprint">id</code> del cuerpo.</p>
+
+<h2 id="eliminar-una-anotaci-n">Eliminar una anotación</h2>
+<pre class="highlight shell"><code>curl -v -X DELETE https://liqen-core.herokuapp.com/questions/1 <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">DELETE https://liqen-core.herokuapp.com/questions/&lt;ID&gt;</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<h3 id="respuesta-http">Respuesta HTTP</h3>
+
+<p>En caso de éxito, se retorna un código <code class="prettyprint">204</code> con el cuerpo y cabecera vacíos</p>
+
+<h2 id="a-adir-etiquetas-a-una-pregunta">Añadir etiquetas a una pregunta</h2>
+
+<blockquote>
+<p>Ejemplo de petición</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/questions/1/tags <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span> <span class="se">\</span>
+    -d <span class="s1">'{
+    "tag_id": 1
+}'</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">POST https://liqen-core.herokuapp.com/questions/&lt;ID&gt;/tags</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<p>En el cuerpo debe ser un JSON con los atributos:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">tag_id</code></td>
+<td>integer</td>
+<td>Identificador de la etiqueta</td>
+</tr>
+</tbody></table>
+
+<h3 id="respuesta">Respuesta</h3>
+
+<p>Si los parámetros indicados son correctos, se añade en la pregunta indicada el tag correspondiente.</p>
+
+<h2 id="quitar-etiquetas-a-una-pregunta">Quitar etiquetas a una pregunta</h2>
+
+<blockquote>
+<p>Ejemplo de petición</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -v -X DELETE https://liqen-core.herokuapp.com/questions/1/tags/1 <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">DELETE https://liqen-core.herokuapp.com/questions/&lt;ID&gt;/tags/&lt;ID TAG&gt;</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<p>En caso de éxito, se retorna un código <code class="prettyprint">204</code> con el cuerpo y cabecera vacíos</p>
+
+          <h1 id="hechos">Hechos</h1>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"question_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"annotations"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Un hecho se define como un conjunto de Anotaciones que componen una única unidad informativa.</p>
+
+<p>Por ejemplo, el texto siguiente:</p>
+
+<p>&ldquo;1.- Turquía es el país que más refugiados alberga &ndash;2.541.352&ndash;, con una población de unos 80 millones de personas.&rdquo;</p>
+
+<p>Puede tener dos anotaciones:</p>
+
+<ul>
+<li>&ldquo;Turquía&rdquo; con la etiqueta <em>país</em> y la dimensión <em>where</em></li>
+<li>&ldquo;2.541.352&rdquo; con la etiqueta <em>amount</em> y la dimensión <em>what</em></li>
+</ul>
+
+<h2 id="atributos">Atributos</h2>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">id</code></td>
+<td>string</td>
+<td>Identificador del propio recurso (el hecho)</td>
+</tr>
+<tr>
+<td><code class="prettyprint">question_id</code></td>
+<td>object</td>
+<td><em>(opcional)</em> ID de la pregunta a la que responde el hecho</td>
+</tr>
+<tr>
+<td><code class="prettyprint">annotations</code></td>
+<td>array</td>
+<td>Lista de objetos que representan las anotaciones que pertenecen al hecho</td>
+</tr>
+</tbody></table>
+
+<h2 id="obtener-una-lista-de-hechos">Obtener una lista de hechos</h2>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/articles <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+
+<blockquote>
+<p>Respuesta</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"question_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"question_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"question_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">GET /facts/</code></p>
+
+<h2 id="obtener-un-hecho">Obtener un hecho</h2>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/articles/1 <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span>
+</code></pre>
+
+<blockquote>
+<p>Respuesta</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chiquito ipsum"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"annotations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">GET /facts/&lt;ID&gt;</code></p>
+
+<h2 id="crear-un-hecho-sin-anotaciones">Crear un hecho sin anotaciones</h2>
+<pre class="highlight shell"><code>curl -v -X POST https://liqen-core.herokuapp.com/articles <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span> <span class="se">\</span>
+    -d <span class="s1">'{
+    "question_id": "3"
+}'</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">POST /facts</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<p>En el cuerpo debe ser un JSON con los atributos:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">question_id</code></td>
+<td>string</td>
+<td>ID de la pregunta a la que responde el hecho que se desea crear</td>
+</tr>
+</tbody></table>
+
+<h3 id="respuesta-http">Respuesta HTTP</h3>
+
+<p>En caso de éxito, se retorna un mensaje en el que la cabecera tiene los atributos:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">Location</code></td>
+<td>URI del artículo creado</td>
+</tr>
+</tbody></table>
+
+<p>Y en el cuerpo un JSON con el artículo creado.</p>
+
+<p>Para posteriormente editar o eliminar el artículo se puede usar la información de la cabecera <code class="prettyprint">Location</code> o del <code class="prettyprint">id</code> del cuerpo.</p>
+
+<h2 id="eliminar-un-hecho">Eliminar un hecho</h2>
+<pre class="highlight shell"><code>curl -v -X DELETE https://liqen-core.herokuapp.com/facts/1 <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">DELETE https://liqen-core.herokuapp.com/facts/&lt;ID&gt;</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<h3 id="respuesta-http">Respuesta HTTP</h3>
+
+<p>En caso de éxito, se retorna un código <code class="prettyprint">204</code> con el cuerpo y cabecera vacíos</p>
+
+<h2 id="a-adir-anotaciones-a-un-hecho">Añadir anotaciones a un hecho</h2>
+
+<blockquote>
+<p>Ejemplo de petición</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -v https://liqen-core.herokuapp.com/facts/1/annotations <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span> <span class="se">\</span>
+    -d <span class="s1">'{
+    "tag_id": 1
+}'</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">POST https://liqen-core.herokuapp.com/facts/&lt;ID&gt;/annotations</code></p>
+
+<p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
+
+<p>En el cuerpo debe ser un JSON con los atributos:</p>
+
+<table><thead>
+<tr>
+<th>Atributo</th>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">annotation_id</code></td>
+<td>integer</td>
+<td>Identificador de la anotación</td>
+</tr>
+</tbody></table>
+
+<h3 id="respuesta">Respuesta</h3>
+
+<p>Si los parámetros indicados son correctos, se añade en la anotación indicada el tag correspondiente.</p>
+
+<h2 id="quitar-anotaciones-a-un-hecho">Quitar anotaciones a un hecho</h2>
+
+<blockquote>
+<p>Ejemplo de petición</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -v -X DELETE https://liqen-core.herokuapp.com/facts/1/annotations/1 <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    -H <span class="s2">"Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"</span>
+</code></pre>
+
+<h3 id="petici-n-http">Petición HTTP</h3>
+
+<p><code class="prettyprint">DELETE https://liqen-core.herokuapp.com/facts/&lt;ID&gt;/annotations/&lt;ID ANNOTATION&gt;</code></p>
 
 <p>Esta operación require autenticación. En la cabecera, se debe especificar la propiedad <code class="prettyprint">Authorization</code> con el token de sesión.</p>
 
