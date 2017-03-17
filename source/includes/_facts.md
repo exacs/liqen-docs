@@ -3,45 +3,8 @@
 ```json
 {
 	"id": "1",
-	"answers_to": "1",
-	"annotations": [
-		{
-			"id": "1",
-			"article_id": "1",
-			"body": {
-				"id": "country"
-			},
-			"target": {
-				"type": "FragmentSelector",
-				"value": "p1",
-				"refinedBy": {
-					"type": "TextQuoteSelector",
-					"prefix": "1.- ",
-					"exact": "Turquía",
-					"suffix": " es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."
-				}
-			},
-			"dimension": "where"
-		},
-		{
-			"id": "2",
-			"article_id": "1",
-			"body": {
-				"id": "amount"
-			},
-			"target": {
-				"type": "FragmentSelector",
-				"value": "p1",
-				"refinedBy": {
-					"type": "TextQuoteSelector",
-					"prefix": "1.- Turquía es el país que más refugiados alberga --",
-					"exact": "2.541.352",
-					"suffix": "--, con una población de unos 80 millones de personas."
-				}
-			},
-			"dimension": "what"
-		}
-	]
+	"question_id": "1",
+	"annotations": []
 }
 ```
 
@@ -58,116 +21,163 @@ Puede tener dos anotaciones:
 
 ## Atributos
 
-Atributo   |Tipo  |Descripción
---------   |----  |-----------
-id         |string|Identificador del propio recurso (el hecho)
-answers_to |object|*(opcional)* ID de la pregunta a la que responde el hecho
+Atributo     |Tipo  |Descripción
+--------     |----  |-----------
+`id`         |string|Identificador del propio recurso (el hecho)
+`question_id`|object|*(opcional)* ID de la pregunta a la que responde el hecho
+`annotations`|array |Lista de objetos que representan las anotaciones que pertenecen al hecho
 
 ## Obtener una lista de hechos
 
-`GET /facts/`
+```sh
+curl -v https://liqen-core.herokuapp.com/articles \
+	-H "Content-Type: application/json"
+```
 
-TODO
+> Respuesta
+
+```json
+[
+	{
+		"id": 3,
+		"question_id": 1
+	},
+	{
+		"id": 3,
+		"question_id": 1
+	}
+	{
+		"id": 3,
+		"question_id": 1
+	}
+]
+```
+
+### Petición HTTP
+
+`GET /facts/`
 
 ## Obtener un hecho
 
-`GET /facts/<ID>`
+```sh
+curl -v https://liqen-core.herokuapp.com/articles/1 \
+	-H "Content-Type: application/json"
+```
 
-TODO
-
-## Crear un hecho y anotaciones
-
-> Ejemplo de cuerpo de la petición en la que se crean, junto con el hecho, dos anotaciones
+> Respuesta
 
 ```json
 {
-	"answers_to": "1",
+	"id": 1,
+	"title": "Chiquito ipsum",
 	"annotations": [
 		{
-			"article_id": "1",
-			"body": {
-				"id": "country"
-			},
-			"target": {
-				"type": "FragmentSelector",
-				"value": "p1",
-				"refinedBy": {
-					"type": "TextQuoteSelector",
-					"prefix": "1.- ",
-					"exact": "Turquía",
-					"suffix": " es el país que más refugiados alberga --2.541.352--, con una población de unos 80 millones de personas."
-				}
-			},
-			"dimension": "where"
-		},
-		{
-			"article_id": "1",
-			"body": {
-				"id": "number"
-			},
-			"target": {
-				"type": "FragmentSelector",
-				"value": "p1",
-				"refinedBy": {
-					"type": "TextQuoteSelector",
-					"prefix": "1.- Turquía es el país que más refugiados alberga --",
-					"exact": "2.541.352",
-					"suffix": "--, con una población de unos 80 millones de personas."
-				}
-			},
-			"dimension": "what"
+			"id": "3"
 		}
 	]
 }
 ```
 
-`POST /facts`
+### Petición HTTP
 
-Crea un hecho nuevo. Este hecho se puede crear a partir de anotaciones existentes o crear nuevas anotaciones para incluirlas en este nuevo hecho.
+`GET /facts/<ID>`
 
-### Body Parameters
+## Crear un hecho sin anotaciones
 
-Parámetro  |Tipo  |Descripción
----------  |----  |-----------
-answers_to |string|Identificador de la pregunta a la que responderá el hecho.
-annotations|array |Lista de anotaciones
-
-os elementos del array `annotations` son los objetos que se pasarían al método "Crear una anotación".
-
-### Success response
-
-Si la petición tiene éxito, retorna un código 201 (Created) con las cabeceras
-
-Atributo|Descripción
---------|-----------
-Location|URI del nuevo hecho creado
-
-En el cuerpo de la petición se devuelve el objeto completo del hecho recién creado, que incluye también los IDs asignados a las anotaciones creadas.
-
-## Crear un hecho con anotaciones existentes
-
-> Ejemplo en el que se crea un hecho que engloba las anotaciones 1 y 2
-
-```json
-{
-	"answers_to": "1",
-	"annotations": ["1", "2"]
-}
+```sh
+curl -v -X POST https://liqen-core.herokuapp.com/articles \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG" \
+	-d '{
+	"question_id": "3"
+}'
 ```
 
-### Body Parameters
+### Petición HTTP
 
-Parámetro  |Tipo  |Descripción
----------  |----  |-----------
-answers_to |string|Identificador de la pregunta a la que responderá el hecho.
-annotations|array |Lista de anotaciones
+`POST /facts`
 
-Los elementos del array `annotations` son strings, siendo cada uno el ID de la anotación correspondiente.
+Esta operación require autenticación. En la cabecera, se debe especificar la propiedad `Authorization` con el token de sesión.
 
-### Success response
+En el cuerpo debe ser un JSON con los atributos:
 
-Si la petición tiene éxito, retorna un código 201 (Created) con las cabeceras
+Atributo     |Tipo   |Descripción
+--------     |----   |-----------
+`question_id`|string |ID de la pregunta a la que responde el hecho que se desea crear
 
-Atributo|Descripción
---------|-----------
-Location|URI del nuevo hecho creado
+### Respuesta HTTP
+
+En caso de éxito, se retorna un mensaje en el que la cabecera tiene los atributos:
+
+Atributo  |Descripción
+--------  |-----------
+`Location`|URI del artículo creado
+
+Y en el cuerpo un JSON con el artículo creado.
+
+Para posteriormente editar o eliminar el artículo se puede usar la información de la cabecera `Location` o del `id` del cuerpo.
+
+## Eliminar un hecho
+
+```sh
+curl -v -X DELETE https://liqen-core.herokuapp.com/facts/1 \
+	-H "Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"
+```
+
+### Petición HTTP
+
+`DELETE https://liqen-core.herokuapp.com/facts/<ID>`
+
+Esta operación require autenticación. En la cabecera, se debe especificar la propiedad `Authorization` con el token de sesión.
+
+### Respuesta HTTP
+
+En caso de éxito, se retorna un código `204` con el cuerpo y cabecera vacíos
+
+## Añadir anotaciones a un hecho
+
+> Ejemplo de petición
+
+```sh
+curl -v https://liqen-core.herokuapp.com/facts/1/annotations \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG" \
+	-d '{
+	"tag_id": 1
+}'
+```
+
+### Petición HTTP
+
+`POST https://liqen-core.herokuapp.com/facts/<ID>/annotations`
+
+Esta operación require autenticación. En la cabecera, se debe especificar la propiedad `Authorization` con el token de sesión.
+
+En el cuerpo debe ser un JSON con los atributos:
+
+Atributo       |Tipo   |Descripción
+--------       |----   |-----------
+`annotation_id`|integer|Identificador de la anotación
+
+### Respuesta
+
+Si los parámetros indicados son correctos, se añade en la anotación indicada el tag correspondiente.
+
+
+## Quitar anotaciones a un hecho
+
+> Ejemplo de petición
+
+```sh
+curl -v -X DELETE https://liqen-core.herokuapp.com/facts/1/annotations/1 \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer EEwJ6tF9x5WCIZDYzyZGaz6Khbw7raYRIBV_WxVvgmsG"
+```
+
+### Petición HTTP
+
+`DELETE https://liqen-core.herokuapp.com/facts/<ID>/annotations/<ID ANNOTATION>`
+
+Esta operación require autenticación. En la cabecera, se debe especificar la propiedad `Authorization` con el token de sesión.
+
+En caso de éxito, se retorna un código `204` con el cuerpo y cabecera vacíos
