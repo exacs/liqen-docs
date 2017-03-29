@@ -3,162 +3,34 @@
 ```json
 {
 	"title": "My first article",
-	"body": [
-		{
-			"name": "p",
-			"id": "diane",
-			"children": [
-				"¿Encuentras que este sistema funciona bien? ",
-				{
-					"name": "strong",
-					"id": "",
-					"children": [
-						"O déjame adivinarlo: nunca lo has probado antes."
-					]
-				},
-				" En realidad tú no le entras a las chicas normalmente"
-			]
-		},
-		{
-			"name": "footer",
-			"id": "",
-			"children": [
-				"– Trainspotting"
-			]
+	"source": {
+		"uri": "https://es.wikiquote.org/wiki/Trainspotting",
+		"target": {
+			"type": "XPathSelector",
+			"value": "//*[@id=\"bodyContent\"]"
 		}
-	]
+	}
 }
 ```
 
-Un artículo es un texto sobre el que se pueden crear anotaciones. Un artículo, por ejemplo, puede ser una entrada de un blog.
+Un artículo es una referencia a un artículo sobre el que se pueden crear anotaciones. Un artículo, por ejemplo, puede ser el link a una entrada de blog.
 
-## Cuerpo
+## Atributos de un artículo
 
-> Ejemplo 1. Un único elemento.
+Un artículo tiene los atributos siguientes:
 
-```html
-<blockquote id="trainspotting">Elige la vida. Elige un empleo.</p>
-```
+Atributo | Descripción
+:------- | :----------
+`id`     | Identificador del artículo (interno de Liqen)
+`title`  | Título del artículo
+`source` | Referencia al artículo
 
-```json
-[
-	{
-		"name": "blockquote",
-		"id": "trainspotting",
-		"children": [
-			"Elige la vida. Elige un empleo."
-		]
-	}
-]
-```
+A su vez, el `source` tiene los atributos:
 
-El cuerpo es un objeto JS que representa el HTML del artículo. Es un array de `Element`.
-
-`Element = {name, id, children}; children = Array<string | Element>`
-
-Element es un objeto con tres atributos: `name` (nombre de la etiqueta), `id` (atributo ID del elemento) y `children` (hijos del elemento).
-
-Los atributos `name` e `id` son strings. `children` es un array, cuyos elementos son `string` o `Element`.
-
-Ver los ejemplos para más información
-
-> Ejemplo 2. Varios elementos
-
-```html
-<blockquote id="renton">Me lo he justificado a mí mismo de todas las maneras.</p>
-<p id="sickboy">Ursula Andress, la chica Bond por excelencia. Todo el mundo lo dice.</p>
-```
-
-```json
-[
-	{
-		"name": "blockquote",
-		"id": "renton",
-		"children": [
-			"Me lo he justificado a mí mismo de todas las maneras"
-		]
-	},
-	{
-		"name": "p",
-		"id": "sickboy",
-		"children": [
-			"Ursula Andress, la chica Bond por excelencia. Todo el mundo lo dice."
-		]
-	}
-]
-```
-
-> Ejemplo 3. Elementos hijo
-
-```html
-<h1>Tabla</h1>
-<table>
-	<tr>
-		<td>Elemento 1</td>
-		<td>Elemento 2</td>
-		<td>Elemento 3</td>
-	</tr>
-</table>
-```
-
-```json
-[
-	{
-		"name": "h1",
-		"children": ["Tabla"]
-	},
-	{
-		"name": "table",
-		"children": [
-			{
-				"name": "tr",
-				"children": [
-					{
-						"name": "td",
-						"children": ["Elemento 1"]
-					},
-					{
-						"name": "td",
-						"children": ["Elemento 2"]
-					},
-					{
-						"name": "td",
-						"children": ["Elemento 3"]
-					}
-				]
-			}
-		]
-	}
-]
-```
-
-> Ejemplo 4. Elementos hijo in-line.
-
-```html
-<p id="diane">¿Encuentras que este sistema funciona bien? <strong>O déjame adivinarlo: nunca lo has probado antes.</strong> En realidad tú no le entras a las chicas normalmente</p>
-<footer>– Trainspotting</footer>
-```
-
-```json
-[
-	{
-		"name": "p",
-		"id": "diane",
-		"children": [
-			"¿Encuentras que este sistema funciona bien? ",
-			{
-				"name": "strong",
-				"children": ["O déjame adivinarlo: nunca lo has probado antes."]
-			},
-			" En realidad tú no le entras a las chicas normalmente"
-		]
-	},
-	{
-		"name": "footer",
-		"children": ["– Trainspotting"]
-	}
-]
-```
+Atributo | Descripción
+:------- | :----------
+`uri`    | URI del artículo.
+`target` | Selector. Delimita qué parte del contenido generado por la URI es el artículo.
 
 ## Obtener todos los artículos
 
@@ -198,15 +70,14 @@ curl -v https://liqen-core.herokuapp.com/articles/1 \
 ```json
 {
 	"id": 1,
-	"title": "Chiquito ipsum",
-	"body": [
-		{
-			"name": "p",
-			"children": [
-				"Lorem fistrum a gramenawer qué dise usteer jarl torpedo amatomaa no te digo trigo por no llamarte Rodrigor al ataquerl no puedor."
-			]
+	"title": "My first article",
+	"source": {
+		"uri": "https://es.wikiquote.org/wiki/Trainspotting",
+		"target": {
+			"type": "XPathSelector",
+			"value": "//*[@id=\"bodyContent\"]"
 		}
-	]
+	}
 }
 ```
 
