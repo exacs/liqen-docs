@@ -1,4 +1,10 @@
-# Objeto Anotación
+# Anotaciones
+
+Una Anotación es una marca realizada en un artículo. Junto a la marca, se aporta información extra: una serie de *conceptos* y una *dimensión*.
+
+## Objeto Anotación
+
+> Ejemplo
 
 ```json
 {
@@ -10,8 +16,6 @@
 	"dimension": ""
 }
 ```
-
-Una Anotación es una marca realizada en un artículo. Junto a la marca, se aporta información extra: una serie de *conceptos* y una *dimensión*.
 
 Atributos de una anotación:
 
