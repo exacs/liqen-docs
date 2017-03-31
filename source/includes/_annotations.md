@@ -61,6 +61,15 @@ curl -v https://liqen-core.herokuapp.com/annotations \
 
 `GET https://liqen-core.herokuapp.com/annotations`
 
+### Parámetros
+
+Se puede filtar la lista de anotaciones devueltas indicando los siguientes parámetros.
+
+Parámetro    | Descripción
+:-------     | :----------
+`article_id` | ID del artículo. Devuelve las anotaciones de un solo artículo
+`author`     | ID del usuario. Devuelve las anotaciones creadas por un usuario
+
 ### Respuesta HTTP
 
 En caso de éxito se retorna en el cuerpo un JSON, cuyo contenido es un array de objetos anotación.
